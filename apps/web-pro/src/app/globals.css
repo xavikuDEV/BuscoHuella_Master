@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+:root {
+  /* Identidad BuscoHuella - Paleta de alto contraste (WCAG 2.2) */
+  --background: #ffffff;
+  --foreground: #111827; /* Gray 900 para mejor lectura */
+  --brand-primary: #1a5cff;
+  --brand-success: #10b981;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-brand: var(--brand-primary);
+  --color-success: var(--brand-success);
+  
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #030712; /* Blue-black muy profundo */
+    --foreground: #f9fafb;
+    --brand-primary: #3b82f6;
+  }
+}
+
+/* Reset de accesibilidad */
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Utilidad para foco accesible (Vital para la ONCE) */
+:focus-visible {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
+}
