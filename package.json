@@ -1,0 +1,26 @@
+{
+  "name": "buscohuella-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Monorepo Institucional BuscoHuella",
+  "scripts": {
+    "web:dev": "pnpm --filter @buscohuella/web dev",
+    "web:build": "pnpm --filter @buscohuella/web build",
+    "app:start": "pnpm --filter @buscohuella/app start",
+    "shared:test": "pnpm --filter @buscohuella/shared test",
+    "structure": "powershell ./scripts/update-structure.ps1"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "inflight": "1.0.6",
+      "glob": "^7.2.3"
+    },
+    "ignoredBuiltDependencies": [
+      "sharp",
+      "unrs-resolver"
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.25.0
+ignore:
+  'SNYK-JS-INFLIGHT-6095116':
+    - '*':
+        reason: 'Dependencia transitiva de Expo/React-Native sin actualización disponible. Override aplicado en package.json.'
+        expires: '2026-12-31T23:59:59.999Z'
