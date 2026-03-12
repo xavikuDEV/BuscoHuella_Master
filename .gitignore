@@ -2,6 +2,7 @@
 
 # Dependencias (El Almacén Central)
 node_modules/
+.pnpm-store/
 
 # Next.js (Web)
 .next/
@@ -9,25 +10,34 @@ out/
 
 # Expo / React Native (Mobile)
 .expo/
+dist/
+web-build/
 *.jks
 *.p12
 *.key
 *.mobileprovision
 
+# 🔑 Seguridad y Secretos (¡PROHIBIDO SUBIR!)
+.env
+.env.local
+.env.*.local
+*.pem
+credentials.json
+token.json
+
+# 🤖 IA y Agentes (Contexto Local)
+.aider*
+.aider.chat.history.md
+.aider.input.history
+logs/update.json
+
 # Herramientas y Caché
 .turbo/
 .pnpm-debug.log
 .DS_Store
-dist/
+Thumbs.db
+*.log
 
-# Seguridad y Variables (¡VITAL!)
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts

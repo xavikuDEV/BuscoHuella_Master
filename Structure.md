@@ -1,11 +1,21 @@
 # 🐾 Estructura del Búnker: BuscoHuella 2026
 >
-> **Última actualización:** 11/03/2026 23:02:35
-> **Métricas:** **41** archivos · **7** TypeScript · **1** CSS · **0** SQL · **2** YAML
+> **Última actualización:** 12/03/2026 21:56:48
+> **Métricas:** **60** archivos · **8** TypeScript · **1** CSS · **0** SQL · **2** YAML
 
 ---
 
 ├── 📁 agents
+│   ├── 📁 skills
+│   │   ├── 📄 architect.md
+│   │   ├── 📄 db-specialist.md
+│   │   ├── 📄 notion_sync.md
+│   │   ├── 📄 orchestrator.md
+│   │   └── 📄 specialist.md
+│   ├── 📄 access_control.md
+│   ├── 📄 AGENT_ROLES.md
+│   ├── 📄 profiles.md
+│   └── 📄 skills.md
 ├── 📁 apps
 │   ├── 📁 mobile-app
 │   │   ├── 📁 assets
@@ -15,7 +25,6 @@
 │   │   │   ├── 📄 favicon.png
 │   │   │   ├── 📄 icon.png
 │   │   │   └── 📄 splash-icon.png
-│   │   ├── 📄 .gitignore
 │   │   ├── 📄 app.json
 │   │   ├── 📄 App.tsx
 │   │   ├── 📄 index.ts
@@ -34,7 +43,6 @@
 │       │       ├── 📄 globals.css
 │       │       ├── 📄 layout.tsx
 │       │       └── 📄 page.tsx
-│       ├── 📄 .gitignore
 │       ├── 📄 eslint.config.mjs
 │       ├── 📄 next-env.d.ts
 │       ├── 📄 next.config.ts
@@ -45,21 +53,32 @@
 ├── 📁 docs
 │   ├── 📁 adr
 │   ├── 📁 db
-│   └── 📁 legal
+│   ├── 📁 legal
+│   ├── 📄 convention.md
+│   └── 📄 roadmap.md
 ├── 📁 logs
 ├── 📁 packages
 │   ├── 📁 shared-config
 │   ├── 📁 shared-core
+│   │   ├── 📄 constants.ts
 │   │   ├── 📄 index.ts
 │   │   └── 📄 package.json
 │   └── 📁 shared-ui
 ├── 📁 scripts
+│   ├── 📄 check_bunker_health.ps1
+│   ├── 📄 generate-context.ps1
+│   ├── 📄 genesis_bunker.ps1
+│   ├── 📄 log-task.mjs
+│   ├── 📄 menu.ps1
+│   ├── 📄 scaffold_engines.ps1
+│   └── 📄 update-structure.ps1
+├── 📁 tests
+│   └── 📄 test-connections.mjs
+├── 📄 .ai_context.md
+├── 📄 .gitignore
+├── 📄 .snyk
 ├── 📄 agents.md
 ├── 📄 ARCHITECT_CONTEXT.md
-├── 📄 check_bunker_health.ps1
-├── 📄 genesis_bunker.ps1
-├── 📄 menu.ps1
+├── 📄 CONTRIBUTORS.md
 ├── 📄 package.json
-├── 📄 pnpm-workspace.yaml
-├── 📄 scaffold_engines.ps1
-└── 📄 update-structure.ps1
+└── 📄 pnpm-workspace.yaml
