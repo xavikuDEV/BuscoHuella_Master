@@ -1,4 +1,8 @@
+﻿# 🛠️ Forzar el Búnker a hablar en 2026 (UTF-8 Total)
+$OutputEncoding = [System.Text.Encoding]::UTF8
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+[Console]::InputEncoding = [System.Text.Encoding]::UTF8
+chcp 65001 | Out-Null
 # 🔥 BuscoHuella Fire Test Suite
 Write-Host "🚀 Iniciando Testeo Masivo de Seguridad..." -ForegroundColor Cyan
 

@@ -1,4 +1,4 @@
-$contextFile = "ARCHITECT_CONTEXT.md"
+﻿$contextFile = "ARCHITECT_CONTEXT.md"
 $date = Get-Date -Format "dd/MM/yyyy HH:mm"
 
 $template = @"
