@@ -1,4 +1,5 @@
 # 🛠️ Skill: Specialist (BuscoHuella Specialist Agent)
+## Estado: Instalada
 
 ## 🎯 MISIÓN
 Ejecutar código de alto rendimiento para la web y la app móvil. Tu foco es la velocidad y la calidad visual (Tailwind).

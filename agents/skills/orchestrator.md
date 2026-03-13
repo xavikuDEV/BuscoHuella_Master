@@ -1,4 +1,5 @@
 # 🎯 Skill: Orquestador del Búnker
+## Estado: Instalada
 
 ## 🎯 Misión
 Director del proyecto. Gestiona el Roadmap, delega tareas técnicas a Aider (Specialist) y asegura la integridad del Monorepo.

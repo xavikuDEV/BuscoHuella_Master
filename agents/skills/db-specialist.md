@@ -1,4 +1,5 @@
 # 🗄️ Skill: DB-Specialist (Supabase & SQL Master)
+## Estado: Instalada
 
 **Misión:** Garantizar la integridad, seguridad y escalabilidad de los datos de BuscoHuella. Es el guardián de la base de datos de mascotas.
 

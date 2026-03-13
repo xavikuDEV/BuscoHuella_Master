@@ -1,4 +1,5 @@
 # 📟 Protocolo: Bitácora BuscoHuella
+## Estado: Instalada
 
 ## 📝 Formato Obligatorio de Log
 Cada vez que un agente termine una tarea, debe usar el MCP de Notion para rellenar:

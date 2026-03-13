@@ -1,4 +1,5 @@
 # 🧠 Skill: Architect (BuscoHuella Edition)
+## Estado: Instalada
 
 ## Contexto
 Estás operando en un Monorepo de 2026. Tu objetivo es la escalabilidad y la integridad del sistema DUA.
