@@ -45,18 +45,15 @@ def upload_or_update_file(service, file_path, folder_id):
         return
 
     file_name = os.path.basename(file_path)
-    media = MediaFileUpload(file_path, resumable=True)
-    
-    # Buscar si el archivo ya existe en esa carpeta específica
-    query = f"name='{file_name}' and '{folder_id}' in parents and trashed=false"
-    results = service.files().list(q=query, fields="files(id)").execute()
-    files = results.get('files', [])
-
     file_metadata = {'name': file_name}
+    source_mimetype = None
     
     # Si es markdown, convertir a Google Doc nativo
     if file_name.endswith('.md'):
         file_metadata['mimeType'] = 'application/vnd.google-apps.document'
+        source_mimetype = 'text/markdown'
+
+    media = MediaFileUpload(file_path, mimetype=source_mimetype, resumable=True)
 
     if files:
         # Actualizar archivo existente
