@@ -52,16 +52,22 @@ def upload_or_update_file(service, file_path, folder_id):
     results = service.files().list(q=query, fields="files(id)").execute()
     files = results.get('files', [])
 
+    file_metadata = {'name': file_name}
+    
+    # Si es markdown, convertir a Google Doc nativo
+    if file_name.endswith('.md'):
+        file_metadata['mimeType'] = 'application/vnd.google-apps.document'
+
     if files:
         # Actualizar archivo existente
         file_id = files[0]['id']
-        service.files().update(fileId=file_id, media_body=media).execute()
-        print(f" ✅ Actualizado en Drive: {file_name}")
+        service.files().update(fileId=file_id, body=file_metadata, media_body=media).execute()
+        print(f" ✅ Actualizado en Drive (Docs): {file_name}")
     else:
         # Crear nuevo archivo
-        file_metadata = {'name': file_name, 'parents': [folder_id]}
+        file_metadata['parents'] = [folder_id]
         service.files().create(body=file_metadata, media_body=media, fields='id').execute()
-        print(f" ⬆️ Subido nuevo a Drive: {file_name}")
+        print(f" ⬆️ Subido nuevo a Drive (Docs): {file_name}")
 
 def sync_to_drive():
     try:
