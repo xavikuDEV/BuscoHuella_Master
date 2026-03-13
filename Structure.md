@@ -1,7 +1,6 @@
 # 🐾 Estructura del Búnker: BuscoHuella 2026
->
-> **Última actualización:** 12/03/2026 21:56:48
-> **Métricas:** **60** archivos · **8** TypeScript · **1** CSS · **0** SQL · **2** YAML
+> **Última actualización:** 12/03/2026 23:08:59
+> **Métricas:** **70** archivos · **8** TypeScript · **1** CSS · **0** SQL · **4** YAML
 
 ---
 
@@ -25,9 +24,11 @@
 │   │   │   ├── 📄 favicon.png
 │   │   │   ├── 📄 icon.png
 │   │   │   └── 📄 splash-icon.png
+│   │   ├── 📄 .gitignore
 │   │   ├── 📄 app.json
 │   │   ├── 📄 App.tsx
 │   │   ├── 📄 index.ts
+│   │   ├── 📄 package-lock.json
 │   │   ├── 📄 package.json
 │   │   └── 📄 tsconfig.json
 │   └── 📁 web-pro
@@ -43,10 +44,12 @@
 │       │       ├── 📄 globals.css
 │       │       ├── 📄 layout.tsx
 │       │       └── 📄 page.tsx
+│       ├── 📄 .gitignore
 │       ├── 📄 eslint.config.mjs
 │       ├── 📄 next-env.d.ts
 │       ├── 📄 next.config.ts
 │       ├── 📄 package.json
+│       ├── 📄 pnpm-workspace.yaml
 │       ├── 📄 postcss.config.mjs
 │       ├── 📄 README.md
 │       └── 📄 tsconfig.json
@@ -66,11 +69,13 @@
 │   └── 📁 shared-ui
 ├── 📁 scripts
 │   ├── 📄 check_bunker_health.ps1
+│   ├── 📄 create-task.mjs
 │   ├── 📄 generate-context.ps1
 │   ├── 📄 genesis_bunker.ps1
 │   ├── 📄 log-task.mjs
 │   ├── 📄 menu.ps1
 │   ├── 📄 scaffold_engines.ps1
+│   ├── 📄 sync_drive.py
 │   └── 📄 update-structure.ps1
 ├── 📁 tests
 │   └── 📄 test-connections.mjs
@@ -80,5 +85,8 @@
 ├── 📄 agents.md
 ├── 📄 ARCHITECT_CONTEXT.md
 ├── 📄 CONTRIBUTORS.md
+├── 📄 credentials.json
 ├── 📄 package.json
-└── 📄 pnpm-workspace.yaml
+├── 📄 pnpm-workspace.yaml
+├── 📄 README.md
+└── 📄 token.json

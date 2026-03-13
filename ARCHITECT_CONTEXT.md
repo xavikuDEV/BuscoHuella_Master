@@ -1,21 +1,13 @@
-# 🏗️ ARCHITECT CONTEXT: BuscoHuella Master
-> Última actualización: 12/03/2026
+﻿# ðŸ—ï¸ ARCHITECT CONTEXT: BuscoHuella Master
+> Ãšltima actualizaciÃ³n: 12/03/2026 23:14
 
-## 📍 Estado Actual
-- **Fase:** Q-1 2026 Fase 1.2 (Scaffolding Técnico) — **COMPLETADO** ✅
-- **Hito:** Motores Next.js 15 y Expo operativos y vinculados mediante @buscohuella/shared.
-- **Seguridad:** Entorno TypeScript estricto validado en apps y packages.
+## ðŸ“ Estado Actual
+- **Fase:** Q1 (Cimientos)
+- **Salud:** Blindado ðŸ›¡ï¸
+- **Siguiente Paso:** Modelado Supabase
 
-## 📉 Registro de Auditoría
-- [x] Scaffolding Web PRO (@buscohuella/web).
-- [x] Scaffolding Mobile App (@buscohuella/app).
-- [x] Inicialización de Shared Core (@buscohuella/shared).
-- [x] Vinculación de Workspaces pnpm exitosa.
+## ðŸ¤– Equipo Activo
+# ðŸ‘¤ Perfiles del Proyecto  - **Xavi (Archon):** Owner & Lead Architect. Ãšltima palabra en decisiones de producto. - **Agent-Architect-01:** Identidad Antigravity. Enfoque en TypeScript y Supabase. - **Agent-Specialist-Aider:** Identidad Groq/Llama-3.3. Enfoque en desarrollo rÃ¡pido y CSS.
 
-## 🎯 El Desafío DUA
-Estamos diseñando el **Documento Único Animal**. La arquitectura debe permitir que un código QR apunte a una ficha que se vea bien tanto en el navegador del móvil como en la App nativa.
-
-## 🛠️ Stack Validado
-- Next.js 16 + Tailwind CSS.
-- Expo 55 + React Native.
-- Supabase + PostgREST.
+## ðŸ“ Estructura del Proyecto
+buscohuella-monorepo@1.0.0 D:\Proyectos\BuscoHuella_Master (PRIVATE)  @buscohuella/app@1.0.0 D:\Proyectos\BuscoHuella_Master\apps\mobile-app (PRIVATE)  @buscohuella/web@0.1.0 D:\Proyectos\BuscoHuella_Master\apps\web-pro (PRIVATE)  @buscohuella/shared@0.1.0 D:\Proyectos\BuscoHuella_Master\packages\shared-core (PRIVATE)

@@ -4,26 +4,22 @@ import sys
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
+from googleapiclient.http import MediaFileUpload
 from dotenv import load_dotenv
 
-# 1. Forzar salida de texto para ver qué pasa
-print("🔍 Iniciando sistema de sincronización Drive...")
-
-# 2. Cargar variables
+# 1. Configuración de inicio
+print("🔍 Iniciando sistema de sincronización Drive (Upload Mode)...")
 load_dotenv(dotenv_path='.env.local')
-folder_id = os.getenv("GOOGLE_DRIVE_FOLDER_ID")
-
+FOLDER_ID = os.getenv("GOOGLE_DRIVE_FOLDER_ID")
 SCOPES = ['https://www.googleapis.com/auth/drive.file']
 
 def get_drive_service():
     creds = None
-    # Buscamos el token guardado
     if os.path.exists('token.json'):
         print("📂 Token de sesión encontrado. Cargando...")
         with open('token.json', 'rb') as token:
             creds = pickle.load(token)
             
-    # Si no hay token o no es válido, pedimos permiso
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             print("🔄 Refrescando acceso caducado...")
@@ -35,6 +31,7 @@ def get_drive_service():
                 sys.exit(1)
             
             flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
+            # Mantenemos el puerto 8080 que funciona en tu Brave
             creds = flow.run_local_server(port=8080, prompt='consent', access_type='offline')
             
         with open('token.json', 'wb') as token:
@@ -43,21 +40,43 @@ def get_drive_service():
 
     return build('drive', 'v3', credentials=creds)
 
+def upload_or_update_file(service, file_path, folder_id):
+    if not os.path.exists(file_path):
+        return
+
+    file_name = os.path.basename(file_path)
+    media = MediaFileUpload(file_path, resumable=True)
+    
+    # Buscar si el archivo ya existe en esa carpeta específica
+    query = f"name='{file_name}' and '{folder_id}' in parents and trashed=false"
+    results = service.files().list(q=query, fields="files(id)").execute()
+    files = results.get('files', [])
+
+    if files:
+        # Actualizar archivo existente
+        file_id = files[0]['id']
+        service.files().update(fileId=file_id, media_body=media).execute()
+        print(f" ✅ Actualizado en Drive: {file_name}")
+    else:
+        # Crear nuevo archivo
+        file_metadata = {'name': file_name, 'parents': [folder_id]}
+        service.files().create(body=file_metadata, media_body=media, fields='id').execute()
+        print(f" ⬆️ Subido nuevo a Drive: {file_name}")
+
 def sync_to_drive():
     try:
         service = get_drive_service()
-        print(f"📡 Conectado al Búnker Drive ID: {folder_id}")
+        print(f"📡 Conectado al Búnker Drive ID: {FOLDER_ID}")
         
-        # Prueba de lectura
-        print("📁 Listando archivos en el búnker para validar...")
-        results = service.files().list(pageSize=5, fields="files(name)").execute()
-        items = results.get('files', [])
+        # Archivos que queremos proteger en la nube
+        files_to_sync = [
+            '.ai_context.md',
+            'ARCHITECT_CONTEXT.md',
+            'Structure.md'
+        ]
         
-        if not items:
-            print('⚠️ El búnker está vacío o no tengo permisos en esa carpeta.')
-        else:
-            for item in items:
-                print(f" ✅ Archivo detectado: {item['name']}")
+        for file in files_to_sync:
+            upload_or_update_file(service, file, FOLDER_ID)
                 
         print("✨ RITUAL DE DRIVE COMPLETADO CON ÉXITO ✨")
     except Exception as e:

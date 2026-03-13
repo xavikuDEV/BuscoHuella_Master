@@ -13,21 +13,30 @@ const databaseId = process.env.NOTION_BITACORA_ID;
 
 /**
  * Script Maestro de Registro en Bitácora - BuscoHuella 2026
- * Registra propiedades (columnas) y contenido (walkthrough) en un solo paso.
+ * Soporta entrada vía Variable de Entorno (PowerShell Safe) o Argumentos.
  */
 async function logTask() {
-  const args = process.argv.slice(2);
-
-  if (args.length === 0) {
-    console.error("❌ Error: Se requiere un objeto JSON como argumento.");
-    process.exit(1);
-  }
-
   let data;
+
+  // Prioridad 1: Variable de entorno (Para el Menú de PowerShell)
+  const envData = process.env.NOTION_LOG_DATA;
+  // Prioridad 2: Argumento por línea de comandos
+  const argData = process.argv[2];
+
   try {
-    data = JSON.parse(args[0]);
+    if (envData) {
+      data = JSON.parse(envData);
+    } else if (argData) {
+      data = JSON.parse(argData);
+    } else {
+      console.error(
+        "❌ Error: No se proporcionaron datos. Usa argumentos o la variable NOTION_LOG_DATA.",
+      );
+      process.exit(1);
+    }
   } catch (e) {
-    console.error("❌ Error: El argumento no es un JSON válido.");
+    console.error("❌ Error: Los datos proporcionados no son un JSON válido.");
+    console.error("Input recibido:", envData || argData);
     process.exit(1);
   }
 
@@ -67,14 +76,14 @@ async function logTask() {
         Commit: {
           url: data.commit || null,
         },
-        // Relación bidireccional con el Roadmap
+        // Relación bidireccional con el Roadmap (Si existe ID)
         ...(data.roadmapId && {
           "Tarea Roadmap": {
             relation: [{ id: data.roadmapId }],
           },
         }),
       },
-      // SECCIÓN B: Contenido de la página (El cuerpo que antes salía vacío)
+      // SECCIÓN B: Contenido de la página (Cuerpo del log)
       children: [
         {
           object: "block",
@@ -106,7 +115,7 @@ async function logTask() {
               {
                 text: {
                   content:
-                    "⚠️ Este registro fue generado automáticamente por el sistema de agentes BuscoHuella.",
+                    "⚠️ Este registro fue generado automáticamente por el sistema de gestión del búnker BuscoHuella.",
                 },
               },
             ],
@@ -122,7 +131,8 @@ async function logTask() {
   } catch (error) {
     console.error("❌ Error al registrar en Notion:", error.message);
     if (error.body) {
-      console.error("Detalle de la API:", JSON.parse(error.body).message);
+      const errorDetail = JSON.parse(error.body);
+      console.error("Detalle de la API:", errorDetail.message);
     }
   }
 }
