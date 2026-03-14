@@ -4,47 +4,45 @@ dotenv.config({ path: ".env.local" });
 const NOTION_SECRET = process.env.NOTION_SECRET;
 const ROADMAP_ID = process.env.NOTION_ROADMAP_ID?.trim();
 const BITACORA_ID = process.env.NOTION_BITACORA_ID?.trim();
+const REPO_URL = "https://github.com/xavikuDEV/BuscoHuella_Master";
 
-// Configuración de cabeceras estándar de Notion
 const headers = {
   Authorization: `Bearer ${NOTION_SECRET}`,
   "Content-Type": "application/json",
   "Notion-Version": "2022-06-28",
 };
 
-async function sync(title, databaseId, properties = {}) {
+async function sync(title, databaseId, dbType, properties = {}) {
   try {
-    console.log(`📡 [HTTP DIRECTO] Buscando "${title}"...`);
-
-    // 1. BUSCAR si existe
-    const queryUrl = `https://api.notion.com/v1/databases/${databaseId}/query`;
-    const queryRes = await fetch(queryUrl, {
-      method: "POST",
-      headers,
-      body: JSON.stringify({
-        filter: { property: "Nombre", title: { equals: title } },
-      }),
-    });
+    // 1. BUSCAR con coincidencia parcial para evitar duplicados
+    const queryRes = await fetch(
+      `https://api.notion.com/v1/databases/${databaseId}/query`,
+      {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
+          filter: {
+            property: "Nombre",
+            title: { contains: title.split("—")[0].trim() },
+          },
+        }),
+      },
+    );
 
     const queryData = await queryRes.json();
-    if (!queryRes.ok) throw new Error(queryData.message || "Error en Query");
+    const existingPage = queryData.results?.[0];
 
-    if (queryData.results && queryData.results.length > 0) {
-      // 2. ACTUALIZAR (PATCH)
-      const pageId = queryData.results[0].id;
-      const updateRes = await fetch(
-        `https://api.notion.com/v1/pages/${pageId}`,
-        {
-          method: "PATCH",
-          headers,
-          body: JSON.stringify({ properties }),
-        },
-      );
-      if (!updateRes.ok) throw new Error("Error al actualizar página");
-      console.log(`🔄 Notion: "${title}" actualizado con éxito.`);
+    if (existingPage) {
+      // 2. ACTUALIZAR
+      await fetch(`https://api.notion.com/v1/pages/${existingPage.id}`, {
+        method: "PATCH",
+        headers,
+        body: JSON.stringify({ properties }),
+      });
+      console.log(`🔄 Notion [${dbType}]: "${title}" actualizado.`);
     } else {
-      // 3. CREAR (POST)
-      const createRes = await fetch("https://api.notion.com/v1/pages", {
+      // 3. CREAR
+      await fetch("https://api.notion.com/v1/pages", {
         method: "POST",
         headers,
         body: JSON.stringify({
@@ -55,25 +53,36 @@ async function sync(title, databaseId, properties = {}) {
           },
         }),
       });
-      if (!createRes.ok) throw new Error("Error al crear página");
-      console.log(`✅ Notion: "${title}" creado con éxito.`);
+      console.log(`✅ Notion [${dbType}]: "${title}" creado.`);
     }
   } catch (error) {
-    console.error(`❌ Fallo Crítico API Notion: ${error.message}`);
+    console.error(`❌ Error en Notion [${dbType}]: ${error.message}`);
   }
 }
 
-// Lógica de ejecución
-const [, , taskTitle, dbType, status] = process.argv;
+// Extraer argumentos: [taskTitle, dbType, status, hash]
+const [, , title, type, status, hash] = process.argv;
 
-if (taskTitle) {
-  if (dbType === "roadmap" && ROADMAP_ID) {
-    sync(taskTitle, ROADMAP_ID, {
+if (title) {
+  if (type === "roadmap" && ROADMAP_ID) {
+    // Campos para el Roadmap
+    sync(title, ROADMAP_ID, "Roadmap", {
       Estado: { status: { name: status || "En progreso" } },
+      Agente: { select: { name: "Especialista / Antigravity" } },
+      Fase: { select: { name: "Fase 2: El Despertar del DUA 🧬🛡️" } },
     });
-  } else if (dbType === "bitacora" && BITACORA_ID) {
-    sync(taskTitle, BITACORA_ID, {});
-  } else {
-    console.error("⚠️ Error: Faltan IDs o parámetros.");
+  } else if (type === "bitacora" && BITACORA_ID) {
+    // Campos Ultra-Completos para la Bitácora
+    const commitUrl = hash ? `${REPO_URL}/commit/${hash}` : null;
+
+    sync(title, BITACORA_ID, "Bitácora", {
+      Agente: { select: { name: "Orquestador" } },
+      Categoría: { select: { name: "Infra" } },
+      Fase: { select: { name: "Q1" } },
+      Status: { select: { name: "Éxito ✅" } },
+      Ambiente: { select: { name: "Local" } },
+      Commit: commitUrl ? { url: commitUrl } : undefined,
+      Fecha: { date: { start: new Date().toISOString().split("T")[0] } },
+    });
   }
 }

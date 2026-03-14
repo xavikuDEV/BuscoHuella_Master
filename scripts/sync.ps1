@@ -21,6 +21,6 @@ git push origin main
 # 4. Notion (Actualizar Roadmap a 'En progreso' y loguear en Bitácora)
 Write-Host "📓 Sincronizando con Notion..." -ForegroundColor Magenta
 node .\scripts\notion-update.mjs "Fase 2 — El Despertar del DUA" "roadmap" "En progreso"
-node .\scripts\notion-update.mjs "Hito: $msg" "bitacora"
+node .\scripts\notion-update.mjs "Hito: $msg" "bitacora" "Listo" "$hash"
 
 Write-Host "✅ TODO OK. Commit: $hash" -ForegroundColor Green
