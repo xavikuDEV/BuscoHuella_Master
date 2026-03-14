@@ -1,6 +1,6 @@
 # 🐾 Estructura del Búnker: BuscoHuella 2026
-> **Última actualización:** 14/03/2026 16:25:35
-> **Métricas:** **113** archivos · **26** TypeScript · **1** CSS · **1** SQL · **2** YAML
+> **Última actualización:** 14/03/2026 16:53:03
+> **Métricas:** **114** archivos · **27** TypeScript · **1** CSS · **1** SQL · **2** YAML
 
 ---
 
@@ -58,6 +58,8 @@
 │       │   │   ├── 📄 layout.tsx
 │       │   │   └── 📄 page.tsx
 │       │   ├── 📁 components
+│       │   │   ├── 📁 dashboard
+│       │   │   │   └── 📄 SystemStatus.tsx
 │       │   │   └── 📁 layouts
 │       │   │       └── 📄 AdminLayout.tsx
 │       │   ├── 📁 lib
