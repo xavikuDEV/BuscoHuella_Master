@@ -5,9 +5,6 @@ import { DuaService } from "../services/DuaService.js";
 export class PetRepository {
   constructor(private client: SupabaseClient) {}
 
-  /**
-   * Crea una nueva mascota con integridad DUA.
-   */
   async create(
     petData: Omit<
       Pet,
@@ -39,12 +36,11 @@ export class PetRepository {
     return data as Pet;
   }
 
-  /**
-   * Recupera todas las mascotas del búnker (Uso Administrativo).
-   */
   async findAll(): Promise<{ data: Pet[]; error: any }> {
-    const { data, error } = await this.client.from("pets").select("*");
-
+    const { data, error } = await this.client
+      .from("pets")
+      .select("*")
+      .order("created_at", { ascending: false });
     return { data: (data as Pet[]) || [], error };
   }
 
@@ -65,5 +61,22 @@ export class PetRepository {
       .eq("owner_id", ownerId);
     if (error) throw new Error(`Error: ${error.message}`);
     return (data as Pet[]) || [];
+  }
+
+  async delete(id: string): Promise<{ error: any }> {
+    return await this.client.from("pets").delete().eq("id", id);
+  }
+
+  async update(
+    id: string,
+    petData: Partial<Pet>,
+  ): Promise<{ data: Pet | null; error: any }> {
+    const { data, error } = await this.client
+      .from("pets")
+      .update(petData)
+      .eq("id", id)
+      .select()
+      .single();
+    return { data: data as Pet, error };
   }
 }

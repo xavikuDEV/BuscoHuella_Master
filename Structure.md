@@ -1,6 +1,6 @@
-# 🐾 Estructura del Búnker: BuscoHuella 2026
-> **Última actualización:** 14/03/2026 16:53:03
-> **Métricas:** **114** archivos · **27** TypeScript · **1** CSS · **1** SQL · **2** YAML
+﻿# 🐾 Estructura del Búnker: BuscoHuella 2026
+> **Última actualización:** 14/03/2026 18:23:28
+> **Métricas:** **127** archivos · **38** TypeScript · **1** CSS · **1** SQL · **2** YAML
 
 ---
 
@@ -38,8 +38,8 @@
 │   │   ├── 📄 app.json
 │   │   ├── 📄 App.tsx
 │   │   ├── 📄 index.ts
-│   │   ├── 📄 package-lock.json
 │   │   ├── 📄 package.json
+│   │   ├── 📄 package-lock.json
 │   │   └── 📄 tsconfig.json
 │   └── 📁 web-pro
 │       ├── 📁 e2e
@@ -59,7 +59,10 @@
 │       │   │   └── 📄 page.tsx
 │       │   ├── 📁 components
 │       │   │   ├── 📁 dashboard
+│       │   │   │   ├── 📄 PetTableActions.tsx
 │       │   │   │   └── 📄 SystemStatus.tsx
+│       │   │   ├── 📁 forms
+│       │   │   │   └── 📄 PetRegistrationForm.tsx
 │       │   │   └── 📁 layouts
 │       │   │       └── 📄 AdminLayout.tsx
 │       │   ├── 📁 lib
@@ -68,8 +71,8 @@
 │       │       └── 📄 connectivity.test.ts
 │       ├── 📄 .gitignore
 │       ├── 📄 eslint.config.mjs
-│       ├── 📄 next-env.d.ts
 │       ├── 📄 next.config.ts
+│       ├── 📄 next-env.d.ts
 │       ├── 📄 package.json
 │       ├── 📄 postcss.config.mjs
 │       ├── 📄 README.md
@@ -88,10 +91,13 @@
 │   │   ├── 📁 src
 │   │   │   ├── 📁 models
 │   │   │   │   ├── 📄 pet.ts
+│   │   │   │   ├── 📄 user.ts
 │   │   │   │   └── 📄 UserRoles.ts
 │   │   │   ├── 📁 repositories
 │   │   │   │   ├── 📄 PetRepository.test.ts
-│   │   │   │   └── 📄 PetRepository.ts
+│   │   │   │   ├── 📄 PetRepository.ts
+│   │   │   │   ├── 📄 UserRepository.test.ts
+│   │   │   │   └── 📄 UserRepository.ts
 │   │   │   ├── 📁 services
 │   │   │   │   ├── 📄 DuaService.test.ts
 │   │   │   │   └── 📄 DuaService.ts
@@ -111,8 +117,8 @@
 │   ├── 📄 notion-update.mjs
 │   ├── 📄 push_bunker.ps1
 │   ├── 📄 scaffold_engines.ps1
-│   ├── 📄 sync_drive.py
 │   ├── 📄 sync.ps1
+│   ├── 📄 sync_drive.py
 │   └── 📄 update-structure.ps1
 ├── 📁 supabase
 │   └── 📁 migrations

@@ -1,6 +1,23 @@
-export type PetSpecies = "dog" | "cat" | "bird" | "other";
-export type PetStatus = "active" | "lost" | "found" | "deceased";
-export type PetGender = "male" | "female";
+export enum PetSpecies {
+  DOG = "dog",
+  CAT = "cat",
+  BIRD = "bird",
+  HAMSTER = "hamster",
+  REPTILE = "reptile",
+  OTHER = "other",
+}
+
+export enum PetStatus {
+  ACTIVE = "active",
+  LOST = "lost",
+  FOUND = "found",
+  DECEASED = "deceased",
+}
+
+export enum PetGender {
+  MALE = "male",
+  FEMALE = "female",
+}
 
 export interface Pet {
   id: string; // UUID
