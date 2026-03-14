@@ -1,6 +1,6 @@
 # 🐾 Estructura del Búnker: BuscoHuella 2026
-> **Última actualización:** 14/03/2026 14:34:16
-> **Métricas:** **110** archivos · **24** TypeScript · **1** CSS · **1** SQL · **4** YAML
+> **Última actualización:** 14/03/2026 16:25:35
+> **Métricas:** **113** archivos · **26** TypeScript · **1** CSS · **1** SQL · **2** YAML
 
 ---
 
@@ -52,10 +52,14 @@
 │       │   └── 📄 window.svg
 │       ├── 📁 src
 │       │   ├── 📁 app
+│       │   │   ├── 📁 [locale]
 │       │   │   ├── 📄 favicon.ico
 │       │   │   ├── 📄 globals.css
 │       │   │   ├── 📄 layout.tsx
 │       │   │   └── 📄 page.tsx
+│       │   ├── 📁 components
+│       │   │   └── 📁 layouts
+│       │   │       └── 📄 AdminLayout.tsx
 │       │   ├── 📁 lib
 │       │   │   └── 📄 supabase.ts
 │       │   └── 📁 tests
@@ -65,7 +69,6 @@
 │       ├── 📄 next-env.d.ts
 │       ├── 📄 next.config.ts
 │       ├── 📄 package.json
-│       ├── 📄 pnpm-workspace.yaml
 │       ├── 📄 postcss.config.mjs
 │       ├── 📄 README.md
 │       └── 📄 tsconfig.json
@@ -92,9 +95,6 @@
 │   │   │   │   └── 📄 DuaService.ts
 │   │   │   └── 📄 index.ts
 │   │   ├── 📄 constants.ts
-│   │   ├── 📄 index.spec.ts
-│   │   ├── 📄 index.test.ts
-│   │   ├── 📄 index.ts
 │   │   ├── 📄 package.json
 │   │   └── 📄 tsconfig.json
 │   └── 📁 shared-ui
