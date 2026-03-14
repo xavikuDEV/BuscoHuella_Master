@@ -1,6 +1,6 @@
-﻿# 🐾 Estructura del Búnker: BuscoHuella 2026
-> **Última actualización:** 14/03/2026 12:03:07
-> **Métricas:** **95** archivos · **13** TypeScript · **1** CSS · **1** SQL · **4** YAML
+# 🐾 Estructura del Búnker: BuscoHuella 2026
+> **Última actualización:** 14/03/2026 13:53:46
+> **Métricas:** **106** archivos · **20** TypeScript · **1** CSS · **1** SQL · **4** YAML
 
 ---
 
@@ -38,8 +38,8 @@
 │   │   ├── 📄 app.json
 │   │   ├── 📄 App.tsx
 │   │   ├── 📄 index.ts
-│   │   ├── 📄 package.json
 │   │   ├── 📄 package-lock.json
+│   │   ├── 📄 package.json
 │   │   └── 📄 tsconfig.json
 │   └── 📁 web-pro
 │       ├── 📁 e2e
@@ -58,8 +58,8 @@
 │       │       └── 📄 page.tsx
 │       ├── 📄 .gitignore
 │       ├── 📄 eslint.config.mjs
-│       ├── 📄 next.config.ts
 │       ├── 📄 next-env.d.ts
+│       ├── 📄 next.config.ts
 │       ├── 📄 package.json
 │       ├── 📄 pnpm-workspace.yaml
 │       ├── 📄 postcss.config.mjs
@@ -77,13 +77,20 @@
 │   ├── 📁 shared-config
 │   ├── 📁 shared-core
 │   │   ├── 📁 src
-│   │   │   └── 📁 models
-│   │   │       └── 📄 pet.ts
+│   │   │   ├── 📁 models
+│   │   │   │   └── 📄 pet.ts
+│   │   │   ├── 📁 repositories
+│   │   │   │   ├── 📄 PetRepository.test.ts
+│   │   │   │   └── 📄 PetRepository.ts
+│   │   │   └── 📁 services
+│   │   │       ├── 📄 DuaService.test.ts
+│   │   │       └── 📄 DuaService.ts
 │   │   ├── 📄 constants.ts
 │   │   ├── 📄 index.spec.ts
 │   │   ├── 📄 index.test.ts
 │   │   ├── 📄 index.ts
-│   │   └── 📄 package.json
+│   │   ├── 📄 package.json
+│   │   └── 📄 tsconfig.json
 │   └── 📁 shared-ui
 ├── 📁 scripts
 │   ├── 📄 check_bunker_health.ps1
@@ -96,8 +103,8 @@
 │   ├── 📄 notion-update.mjs
 │   ├── 📄 push_bunker.ps1
 │   ├── 📄 scaffold_engines.ps1
-│   ├── 📄 sync.ps1
 │   ├── 📄 sync_drive.py
+│   ├── 📄 sync.ps1
 │   └── 📄 update-structure.ps1
 ├── 📁 supabase
 │   └── 📁 migrations

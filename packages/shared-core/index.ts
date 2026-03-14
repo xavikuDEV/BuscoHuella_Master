@@ -1,3 +1,5 @@
+export * from "./src/services/DuaService.js";
+
 // El ADN de BuscoHuella
 export const SYSTEM_NAME = "BuscoHuella";
 export const DUA_VERSION = "1.0.0";

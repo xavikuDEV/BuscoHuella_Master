@@ -13,11 +13,12 @@ CREATE TABLE IF NOT EXISTS public.pets (
     
     -- Salud y Características
     weight DECIMAL(5,2),
-    microchip_id TEXT UNIQUE,
+    microchip TEXT UNIQUE,
     is_sterilized BOOLEAN DEFAULT false,
     is_vaccinated BOOLEAN DEFAULT false,
     medical_notes TEXT,
     avatar_url TEXT,
+    metadata JSONB DEFAULT '{}'::jsonb,
     
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()

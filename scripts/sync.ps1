@@ -1,14 +1,15 @@
-﻿# ==============================================
+# ==============================================
 # 🐾 BUSCOHUELLA 2026 — RITUAL DE SINCRONIZACIÓN TOTAL
 # ==============================================
 $OutputEncoding = [System.Text.Encoding]::UTF8
 Write-Host "🚀 INICIANDO SINCRONIZACIÓN TOTAL BUSCOHUELLA" -ForegroundColor Cyan
 
-# --- CONFIGURACIÓN DE CONTEXTO (Cambiar según la tarea) ---
-$agent = "Orquestador"                # Quién lo hace
-$category = "Infra"                      # Categoría: Infra, Backend, Frontend, UI/UX
-$phase = "Fase 2: El Despertar del DUA 🧬🛡️" # Fase actual exacta en Notion
-$hito = "Infra-Génesis"              # Nombre del hito
+# --- CONFIGURACIÓN DE CONTEXTO (Modifica esto según la tarea) ---
+$agent = "Aider"
+$category = "Backend"
+$phase = "Fase 2.2: Persistencia Segura 🛡️"
+$hito = "PetRepository & RLS"
+$ambiente = "Local (Búnker Master)"
 # ---------------------------------------------------------
 
 # 1. Documentación
@@ -26,7 +27,7 @@ if ($LASTEXITCODE -ne 0) {
 
 # 3. Git (Commit y Push)
 Write-Host "`n📦 [3/4] Asegurando cambios en GitHub..." -ForegroundColor Magenta
-$msg = Read-Host "📝 Mensaje del commit (ej: fix: corregir bugs)"
+$msg = Read-Host "📝 Mensaje del commit"
 if (-not $msg) { $msg = "sync: actualización de mantenimiento" }
 
 git add .
@@ -38,12 +39,12 @@ git push origin main
 # 4. Notion (Sincronía Luxury Dinámica)
 Write-Host "`n📓 [4/4] Sincronizando con Notion..." -ForegroundColor Blue
 
-# Actualizar Roadmap (Busca la fase y pone el estado)
-node .\scripts\notion-update.mjs "$phase" "roadmap" "En progreso" "" "" "" "$agent" "" "$phase"
+# Actualizar Roadmap (Pasa: Título, Tipo, Status, Hash, Desc, Hito, Agente, Cat, Fase, Ambiente)
+node .\scripts\notion-update.mjs "$phase" "roadmap" "En progreso" "" "" "" "$agent" "" "$phase" ""
 
-# Registrar en Bitácora (Pasa todos los campos dinámicos)
-$description = "Commit: $msg | Hash: $hash | Ejecutado desde el Centro de Control."
-node .\scripts\notion-update.mjs "Hito: $msg" "bitacora" "Listo" "$hash" "$description" "$hito" "$agent" "$category" "$phase"
+# Registrar en Bitácora
+$description = "📦 Sincronización del Búnker: `n- Mensaje: $msg `n- Hash: $hash `n- Ejecutado por el Centro de Control de BuscoHuella."
+node .\scripts\notion-update.mjs "Hito: $msg" "bitacora" "Éxito ✅" "$hash" "$description" "$hito" "$agent" "$category" "$phase" "$ambiente"
 
 Write-Host "`n✨ RITUAL COMPLETADO CON ÉXITO ✨" -ForegroundColor Green
 Write-Host "🔗 Hash: $hash | 📅 $(Get-Date -Format 'HH:mm:ss')" -ForegroundColor Gray

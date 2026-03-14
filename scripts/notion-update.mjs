@@ -13,7 +13,7 @@ const headers = {
 };
 
 async function sync() {
-  // Capturamos todos los argumentos posibles
+  // Capturamos los 12 argumentos (node, script, +10 variables)
   const [
     ,
     ,
@@ -26,10 +26,11 @@ async function sync() {
     agentName,
     categoryName,
     phaseName,
+    ambienteName,
   ] = process.argv;
 
   try {
-    // 1. BUSCAR tarea en Roadmap (usando la Fase dinámica)
+    // 1. BUSCAR en Roadmap para obtener el ID de la fase y poder enlazar
     const roadmapQuery = await fetch(
       `https://api.notion.com/v1/databases/${ROADMAP_ID}/query`,
       {
@@ -47,6 +48,7 @@ async function sync() {
     const roadmapPageId = roadmapData.results?.[0]?.id;
 
     if (type === "roadmap") {
+      // --- LÓGICA DE ACTUALIZAR ROADMAP ---
       const body = {
         properties: {
           Nombre: { title: [{ text: { content: title } }] },
@@ -65,8 +67,9 @@ async function sync() {
       if (!roadmapPageId) body.parent = { database_id: ROADMAP_ID };
 
       await fetch(url, { method, headers, body: JSON.stringify(body) });
-      console.log(`🔄 Roadmap: "${title}" sincronizado.`);
+      console.log(`🔄 Notion: Roadmap "${title}" sincronizado.`);
     } else if (type === "bitacora") {
+      // --- LÓGICA DE CREAR BITÁCORA ---
       const commitUrl = hash ? `${REPO_URL}/commit/${hash}` : null;
 
       const body = {
@@ -81,12 +84,14 @@ async function sync() {
             ],
           },
           Hito: { select: { name: hitoName || "Hito Técnico" } },
-          Status: { select: { name: "Éxito ✅" } },
+          Status: { select: { name: status || "Éxito ✅" } },
+          Ambiente: { select: { name: ambienteName || "Local" } },
           Commit: commitUrl ? { url: commitUrl } : undefined,
           Fecha: { date: { start: new Date().toISOString().split("T")[0] } },
         },
       };
 
+      // Si encontramos la tarea en el roadmap, las enlazamos
       if (roadmapPageId) {
         body.properties["Tarea Roadmap"] = {
           relation: [{ id: roadmapPageId }],
@@ -98,9 +103,7 @@ async function sync() {
         headers,
         body: JSON.stringify(body),
       });
-      console.log(
-        `✅ Bitácora: "${title}" registrada como ${categoryName} por ${agentName}.`,
-      );
+      console.log(`✅ Notion: Bitácora registrada para el hito "${hitoName}".`);
     }
   } catch (error) {
     console.error(`❌ Error Notion: ${error.message}`);
