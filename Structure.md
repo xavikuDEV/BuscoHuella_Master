@@ -1,5 +1,5 @@
 ﻿# 🐾 Estructura del Búnker: BuscoHuella 2026
-> **Última actualización:** 14/03/2026 11:39:39
+> **Última actualización:** 14/03/2026 11:42:08
 > **Métricas:** **95** archivos · **13** TypeScript · **1** CSS · **1** SQL · **4** YAML
 
 ---
