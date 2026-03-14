@@ -1,6 +1,6 @@
 # 🐾 Estructura del Búnker: BuscoHuella 2026
-> **Última actualización:** 14/03/2026 13:53:46
-> **Métricas:** **106** archivos · **20** TypeScript · **1** CSS · **1** SQL · **4** YAML
+> **Última actualización:** 14/03/2026 14:34:16
+> **Métricas:** **110** archivos · **24** TypeScript · **1** CSS · **1** SQL · **4** YAML
 
 ---
 
@@ -51,11 +51,15 @@
 │       │   ├── 📄 vercel.svg
 │       │   └── 📄 window.svg
 │       ├── 📁 src
-│       │   └── 📁 app
-│       │       ├── 📄 favicon.ico
-│       │       ├── 📄 globals.css
-│       │       ├── 📄 layout.tsx
-│       │       └── 📄 page.tsx
+│       │   ├── 📁 app
+│       │   │   ├── 📄 favicon.ico
+│       │   │   ├── 📄 globals.css
+│       │   │   ├── 📄 layout.tsx
+│       │   │   └── 📄 page.tsx
+│       │   ├── 📁 lib
+│       │   │   └── 📄 supabase.ts
+│       │   └── 📁 tests
+│       │       └── 📄 connectivity.test.ts
 │       ├── 📄 .gitignore
 │       ├── 📄 eslint.config.mjs
 │       ├── 📄 next-env.d.ts
@@ -78,13 +82,15 @@
 │   ├── 📁 shared-core
 │   │   ├── 📁 src
 │   │   │   ├── 📁 models
-│   │   │   │   └── 📄 pet.ts
+│   │   │   │   ├── 📄 pet.ts
+│   │   │   │   └── 📄 UserRoles.ts
 │   │   │   ├── 📁 repositories
 │   │   │   │   ├── 📄 PetRepository.test.ts
 │   │   │   │   └── 📄 PetRepository.ts
-│   │   │   └── 📁 services
-│   │   │       ├── 📄 DuaService.test.ts
-│   │   │       └── 📄 DuaService.ts
+│   │   │   ├── 📁 services
+│   │   │   │   ├── 📄 DuaService.test.ts
+│   │   │   │   └── 📄 DuaService.ts
+│   │   │   └── 📄 index.ts
 │   │   ├── 📄 constants.ts
 │   │   ├── 📄 index.spec.ts
 │   │   ├── 📄 index.test.ts
