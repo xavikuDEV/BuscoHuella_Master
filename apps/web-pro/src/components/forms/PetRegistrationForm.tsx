@@ -8,33 +8,46 @@ import {
   DuaService,
   PetSpecies,
   PetGender,
+  PetStatus,
   UserProfile,
+  Pet,
 } from "@buscohuella/shared";
-import { registerPetAction } from "@/app/[locale]/dashboard/admin/pets/actions";
+import {
+  registerPetAction,
+  updatePetAction,
+} from "@/app/[locale]/dashboard/admin/pets/actions";
 
+// 🛡️ Esquema con validación de obligatorios
 const petSchema = z.object({
-  name: z.string().min(2, "Nombre demasiado corto"),
+  name: z.string().min(2, "El nombre es obligatorio"),
   species: z.nativeEnum(PetSpecies),
-  breed: z.string().min(2, "La raza es obligatoria"),
   gender: z.nativeEnum(PetGender),
-  owner_id: z.string().uuid("Seleccione un dueño válido"),
+  owner_id: z.string().uuid("Debes asignar un dueño"),
+  // Campos opcionales (Ficha Pro)
+  breed: z.string().optional(),
+  chip_number: z.string().optional(),
+  birth_date: z.string().optional(),
+  pathologies: z.string().optional(),
 });
 
 type PetFormValues = z.infer<typeof petSchema>;
 
 export default function PetRegistrationForm({
   owners,
+  petToEdit,
+  onCancel,
 }: {
   owners: UserProfile[];
+  petToEdit?: Pet | null;
+  onCancel: () => void;
 }) {
-  const [liveHash, setLiveHash] = useState("Esperando datos...");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showProFields, setShowProFields] = useState(false);
   const [ownerSearch, setOwnerSearch] = useState("");
 
   const {
     register,
     handleSubmit,
-    watch,
     setValue,
     reset,
     formState: { errors },
@@ -43,128 +56,176 @@ export default function PetRegistrationForm({
     defaultValues: { species: PetSpecies.DOG, gender: PetGender.MALE },
   });
 
-  // 🔍 Filtrado inteligente de dueños
+  useEffect(() => {
+    if (petToEdit) {
+      // 🛡️ Casteamos temporalmente a 'any' para evitar que TS bloquee
+      // si el paquete compartido aún no se ha refrescado
+      const p = petToEdit as any;
+
+      reset({
+        name: p.name,
+        species: p.species as PetSpecies,
+        gender: p.gender as PetGender,
+        owner_id: p.owner_id,
+        breed: p.breed || "",
+        chip_number: p.chip_number || "", // 👈 Ya no dará error
+        pathologies: p.pathologies || "", // 👈 Ya no dará error
+      });
+
+      const owner = owners.find((o) => o.id === p.owner_id);
+      setOwnerSearch(owner?.full_name || owner?.email || "");
+      setShowProFields(true);
+    }
+  }, [petToEdit, reset, owners]);
+
   const filteredOwners = useMemo(() => {
     return owners.filter(
       (o) =>
-        o.full_name.toLowerCase().includes(ownerSearch.toLowerCase()) ||
+        (o.full_name || "").toLowerCase().includes(ownerSearch.toLowerCase()) ||
         o.email.toLowerCase().includes(ownerSearch.toLowerCase()),
     );
   }, [owners, ownerSearch]);
 
-  const watchedFields = watch();
-
-  useEffect(() => {
-    if (watchedFields.name && watchedFields.owner_id) {
-      const hash = DuaService.generateIntegrityHash({
-        name: watchedFields.name,
-        species: watchedFields.species,
-        microchip_id: "preview",
-        owner_id: watchedFields.owner_id,
-      });
-      setLiveHash(hash);
-    }
-  }, [watchedFields]);
-
   const onSubmit = async (values: PetFormValues) => {
     setIsSubmitting(true);
-    const result = await registerPetAction(values);
+    const result = petToEdit
+      ? await updatePetAction(petToEdit.id, values)
+      : await registerPetAction(values as any);
     if (result.success) {
-      reset();
-      setOwnerSearch("");
-      alert("✅ Activo registrado con éxito");
+      onCancel();
+      alert("✅ Datos sincronizados con el búnker");
     } else {
-      alert("❌ Error RLS/Búnker: " + result.error);
+      alert("❌ Error: " + result.error);
     }
     setIsSubmitting(false);
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="space-y-6 bg-slate-900/50 p-8 rounded-3xl border border-slate-800"
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+      {/* 🟢 SECCIÓN 1: DATOS ESENCIALES */}
       <div className="space-y-4">
-        {/* Nombre y Raza */}
-        <div className="grid grid-cols-2 gap-4">
-          <input
-            {...register("name")}
-            placeholder="Nombre"
-            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:border-cyan-500 outline-none"
-          />
-          <input
-            {...register("breed")}
-            placeholder="Raza"
-            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:border-cyan-500 outline-none"
-          />
+        <div className="flex items-center gap-2 mb-4">
+          <span className="w-2 h-2 bg-cyan-500 rounded-full animate-pulse" />
+          <h4 className="text-[10px] font-black uppercase text-slate-500 tracking-widest">
+            Protocolo Esencial
+          </h4>
         </div>
 
-        {/* Especie Extendida */}
-        <select
-          {...register("species")}
-          className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm outline-none"
-        >
-          <option value={PetSpecies.DOG}>🐶 Perro</option>
-          <option value={PetSpecies.CAT}>🐱 Gato</option>
-          <option value={PetSpecies.BIRD}>🦜 Pájaro</option>
-          <option value={PetSpecies.HAMSTER}>🐹 Hamster</option>
-          <option value={PetSpecies.REPTILE}>🦎 Reptil</option>
-          <option value={PetSpecies.OTHER}>✨ Otro</option>
-        </select>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-1">
+            <input
+              {...register("name")}
+              placeholder="Nombre del animal"
+              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:border-cyan-500 outline-none"
+            />
+            {errors.name && (
+              <p className="text-[10px] text-rose-500 ml-2">
+                {errors.name.message}
+              </p>
+            )}
+          </div>
 
-        {/* 🔍 Buscador de Dueños (Combobox Manual) */}
+          <select
+            {...register("species")}
+            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm outline-none"
+          >
+            {Object.values(PetSpecies).map((s) => (
+              <option key={s} value={s}>
+                {s.toUpperCase()}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <div className="relative space-y-2">
-          <label className="text-[10px] font-black uppercase text-slate-500">
-            Buscar Dueño (Nodo Humano)
-          </label>
           <input
             type="text"
-            placeholder="Escriba nombre o email..."
+            placeholder="Buscar Dueño..."
             value={ownerSearch}
             onChange={(e) => setOwnerSearch(e.target.value)}
             className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:border-indigo-500 outline-none"
           />
-          {ownerSearch.length > 0 && (
-            <div className="absolute z-10 w-full mt-1 bg-slate-900 border border-slate-700 rounded-xl max-h-40 overflow-y-auto shadow-2xl">
+          {ownerSearch && filteredOwners.length > 0 && !petToEdit && (
+            <div className="absolute z-30 w-full mt-1 bg-slate-950 border border-slate-800 rounded-xl max-h-40 overflow-y-auto">
               {filteredOwners.map((o) => (
                 <div
                   key={o.id}
                   onClick={() => {
                     setValue("owner_id", o.id);
-                    setOwnerSearch(o.full_name);
+                    setOwnerSearch(o.full_name || o.email);
                   }}
                   className="p-3 hover:bg-slate-800 cursor-pointer text-xs border-b border-slate-800 last:border-0"
                 >
-                  <p className="font-bold text-white">{o.full_name}</p>
+                  <p className="font-bold text-white">
+                    {o.full_name || "Sin nombre"}
+                  </p>
                   <p className="text-slate-500 text-[9px]">{o.email}</p>
                 </div>
               ))}
             </div>
           )}
           {errors.owner_id && (
-            <p className="text-rose-500 text-[10px]">
+            <p className="text-[10px] text-rose-500 ml-2">
               {errors.owner_id.message}
             </p>
           )}
         </div>
       </div>
 
-      <div className="p-4 bg-cyan-500/5 border border-cyan-500/10 rounded-2xl">
-        <p className="text-[9px] font-black text-cyan-500 uppercase mb-2">
-          Hash de Integridad DUA
-        </p>
-        <p className="font-mono text-[9px] break-all text-slate-500">
-          {liveHash}
-        </p>
+      {/* 🟠 SECCIÓN 2: FICHA PRO (Opcional) */}
+      <div className="pt-4 border-t border-slate-800/50">
+        <button
+          type="button"
+          onClick={() => setShowProFields(!showProFields)}
+          className="text-[10px] font-black uppercase text-slate-400 hover:text-cyan-400 flex items-center gap-2 mb-4"
+        >
+          {showProFields
+            ? "🔽 Ocultar Ficha Pro"
+            : "▶️ Añadir más detalles (Chip, Salud, Linaje...)"}
+        </button>
+
+        {showProFields && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2">
+            <input
+              {...register("chip_number")}
+              placeholder="Número de Microchip"
+              className="w-full bg-slate-950/50 border border-slate-800 rounded-xl px-4 py-3 text-sm outline-none focus:border-cyan-500"
+            />
+            <input
+              {...register("breed")}
+              placeholder="Raza específica"
+              className="w-full bg-slate-950/50 border border-slate-800 rounded-xl px-4 py-3 text-sm outline-none focus:border-cyan-500"
+            />
+            <textarea
+              {...register("pathologies")}
+              placeholder="Notas médicas o patologías..."
+              className="col-span-2 w-full bg-slate-950/50 border border-slate-800 rounded-xl px-4 py-3 text-sm outline-none focus:border-cyan-500 min-h-[100px]"
+            />
+          </div>
+        )}
       </div>
 
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className="w-full py-4 bg-cyan-600 hover:bg-cyan-500 text-white font-black uppercase text-xs rounded-2xl transition-all shadow-lg active:scale-95"
-      >
-        {isSubmitting ? "Cifrando..." : "Registrar en Búnker"}
-      </button>
+      {/* 🔘 ACCIONES */}
+      <div className="flex gap-3 pt-6">
+        <button
+          type="button"
+          onClick={onCancel}
+          className="flex-1 py-4 bg-slate-800 text-slate-400 font-black uppercase text-[10px] rounded-2xl hover:bg-slate-700 transition-all"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className={`flex-2 py-4 font-black uppercase text-[10px] rounded-2xl transition-all shadow-lg ${petToEdit ? "bg-amber-600 hover:bg-amber-500" : "bg-cyan-600 hover:bg-cyan-500"} text-white`}
+        >
+          {isSubmitting
+            ? "Sincronizando..."
+            : petToEdit
+              ? "Guardar Cambios"
+              : "Completar Registro"}
+        </button>
+      </div>
     </form>
   );
 }

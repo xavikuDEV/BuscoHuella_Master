@@ -5,10 +5,11 @@ import { deletePetAction } from "@/app/[locale]/dashboard/admin/pets/actions";
 
 interface Props {
   petId: string;
-  petName: string; // 👈 Este es el campo que TS decía que faltaba
+  petName: string;
+  onEdit: () => void;
 }
 
-export default function PetTableActions({ petId, petName }: Props) {
+export default function PetTableActions({ petId, petName, onEdit }: Props) {
   const handleDelete = async () => {
     // 🛡️ Usamos el nombre en la confirmación
     const confirmed = confirm(`🚨 ¿Confirmas la eliminación de "${petName}"?`);
@@ -21,7 +22,10 @@ export default function PetTableActions({ petId, petName }: Props) {
 
   return (
     <div className="flex justify-end gap-3">
-      <button className="p-2 hover:bg-slate-800 rounded-lg text-slate-500 hover:text-cyan-400 transition-colors">
+      <button
+        onClick={onEdit}
+        className="p-2 hover:bg-slate-800 rounded-lg text-slate-500 hover:text-cyan-400 transition-colors"
+      >
         ✏️
       </button>
       <button

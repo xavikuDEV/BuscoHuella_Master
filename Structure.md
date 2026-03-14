@@ -1,6 +1,6 @@
 ﻿# 🐾 Estructura del Búnker: BuscoHuella 2026
-> **Última actualización:** 14/03/2026 18:23:28
-> **Métricas:** **127** archivos · **38** TypeScript · **1** CSS · **1** SQL · **2** YAML
+> **Última actualización:** 15/03/2026 00:29:06
+> **Métricas:** **135** archivos · **45** TypeScript · **1** CSS · **1** SQL · **2** YAML
 
 ---
 
@@ -53,22 +53,30 @@
 │       ├── 📁 src
 │       │   ├── 📁 app
 │       │   │   ├── 📁 [locale]
+│       │   │   ├── 📁 auth
+│       │   │   │   └── 📄 actions.ts
 │       │   │   ├── 📄 favicon.ico
 │       │   │   ├── 📄 globals.css
 │       │   │   ├── 📄 layout.tsx
 │       │   │   └── 📄 page.tsx
 │       │   ├── 📁 components
 │       │   │   ├── 📁 dashboard
+│       │   │   │   ├── 📄 ManagePetsClient.tsx
 │       │   │   │   ├── 📄 PetTableActions.tsx
 │       │   │   │   └── 📄 SystemStatus.tsx
 │       │   │   ├── 📁 forms
 │       │   │   │   └── 📄 PetRegistrationForm.tsx
 │       │   │   └── 📁 layouts
-│       │   │       └── 📄 AdminLayout.tsx
+│       │   │       ├── 📄 AdminLayout.tsx
+│       │   │       └── 📄 AdminSidebarNav.tsx
 │       │   ├── 📁 lib
+│       │   │   ├── 📁 supabase
+│       │   │   │   ├── 📄 middleware.ts
+│       │   │   │   └── 📄 server.ts
 │       │   │   └── 📄 supabase.ts
-│       │   └── 📁 tests
-│       │       └── 📄 connectivity.test.ts
+│       │   ├── 📁 tests
+│       │   │   └── 📄 connectivity.test.ts
+│       │   └── 📄 middleware.ts
 │       ├── 📄 .gitignore
 │       ├── 📄 eslint.config.mjs
 │       ├── 📄 next.config.ts
@@ -141,5 +149,6 @@
 ├── 📄 pnpm-workspace.yaml
 ├── 📄 postcss.config.mjs
 ├── 📄 README.md
+├── 📄 ROADMAP_VISION.md
 ├── 📄 token.json
 └── 📄 vitest.config.mts

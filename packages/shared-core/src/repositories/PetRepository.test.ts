@@ -4,10 +4,14 @@ import { PetRepository } from "./PetRepository";
 describe("PetRepository (Protocolo de Blindaje)", () => {
   let repository: PetRepository;
 
-  // 🎭 Mock ajustado a la implementación REAL de findAll
+  // 🎭 Mock avanzado: Soporta .from().select().order().eq().single()
   const mockSupabase = {
     from: vi.fn().mockReturnThis(),
-    select: vi.fn(),
+    select: vi.fn().mockReturnThis(),
+    order: vi.fn().mockReturnThis(),
+    insert: vi.fn().mockReturnThis(),
+    single: vi.fn().mockReturnThis(),
+    eq: vi.fn().mockReturnThis(),
   } as any;
 
   beforeEach(() => {
@@ -16,30 +20,29 @@ describe("PetRepository (Protocolo de Blindaje)", () => {
   });
 
   it("debería recuperar todas las mascotas correctamente (findAll)", async () => {
-    const mockData = [{ name: "Kratos", species: "Perro" }];
+    const mockData = [{ name: "Kratos", species: "dog" }];
 
-    // 🛡️ En tu código, la cadena termina en .select()
-    // Así que .select() es el que debe devolver la Promesa
-    mockSupabase.from.mockReturnValue({
-      select: vi.fn().mockResolvedValue({
-        data: mockData,
-        error: null,
-      }),
+    // Configuramos el final de la cadena (.order) para que devuelva la promesa resuelta
+    mockSupabase.order.mockResolvedValue({
+      data: mockData,
+      error: null,
     });
 
     const { data, error } = await repository.findAll();
 
     expect(error).toBeNull();
     expect(data).toEqual(mockData);
-    expect(data).toHaveLength(1);
+    expect(mockSupabase.from).toHaveBeenCalledWith("pets");
+    expect(mockSupabase.select).toHaveBeenCalledWith("*");
+    expect(mockSupabase.order).toHaveBeenCalledWith("created_at", {
+      ascending: false,
+    });
   });
 
-  it("debería manejar errores de la base de datos", async () => {
-    mockSupabase.from.mockReturnValue({
-      select: vi.fn().mockResolvedValue({
-        data: null,
-        error: { message: "Error de Búnker" },
-      }),
+  it("debería manejar errores de la base de datos en findAll", async () => {
+    mockSupabase.order.mockResolvedValue({
+      data: null,
+      error: { message: "Error de Búnker" },
     });
 
     const { error } = await repository.findAll();

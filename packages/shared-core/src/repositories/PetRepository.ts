@@ -1,33 +1,36 @@
 import { SupabaseClient } from "@supabase/supabase-js";
-import { Pet } from "../models/pet.js";
+import { Pet, PetSpecies, PetStatus } from "../models/pet.js";
 import { DuaService } from "../services/DuaService.js";
 
 export class PetRepository {
   constructor(private client: SupabaseClient) {}
 
   async create(
+    // 🛡️ Mantenemos TODOS los campos excepto los automáticos.
+    // "status" NO se omite aquí para que la Action pueda enviarlo.
     petData: Omit<
       Pet,
-      "id" | "dua_id" | "dua_hash" | "created_at" | "updated_at" | "status"
+      "id" | "dua_id" | "dua_hash" | "created_at" | "updated_at"
     >,
   ): Promise<Pet> {
     const dua_id = DuaService.generateDuaId();
+
+    // Generamos el Hash de Integridad incluyendo el Chip/Identidad
     const identityData = {
       name: petData.name,
       species: petData.species,
       microchip_id: petData.microchip_id || "unregistered",
       owner_id: petData.owner_id,
     };
-
     const dua_hash = DuaService.generateIntegrityHash(identityData);
 
     const { data, error } = await this.client
       .from("pets")
       .insert({
-        ...petData,
+        ...petData, // 👈 Aquí entran: color, weight, size, blood_type, etc.
         dua_id,
         dua_hash,
-        status: "active",
+        status: petData.status || PetStatus.ACTIVE,
       })
       .select()
       .single();
@@ -39,44 +42,38 @@ export class PetRepository {
   async findAll(): Promise<{ data: Pet[]; error: any }> {
     const { data, error } = await this.client
       .from("pets")
-      .select("*")
+      .select(`*, owner:profiles(full_name, email)`)
       .order("created_at", { ascending: false });
-    return { data: (data as Pet[]) || [], error };
+    return { data: (data as any[]) || [], error };
   }
 
-  async getById(id: string): Promise<Pet | null> {
-    const { data, error } = await this.client
+  async update(id: string, data: Partial<Pet>) {
+    // 🛡️ Protegemos la integridad del búnker limpiando IDs y hashes
+    const { id: _, dua_id, dua_hash, created_at, ...updateData } = data as any;
+
+    const { data: updated, error } = await this.client
       .from("pets")
-      .select("*")
+      .update(updateData)
       .eq("id", id)
-      .single();
-    if (error) return null;
-    return data as Pet;
-  }
+      .select()
+      .maybeSingle();
 
-  async getByOwner(ownerId: string): Promise<Pet[]> {
-    const { data, error } = await this.client
-      .from("pets")
-      .select("*")
-      .eq("owner_id", ownerId);
-    if (error) throw new Error(`Error: ${error.message}`);
-    return (data as Pet[]) || [];
+    if (error) return { data: null, error };
+    if (!updated) return { data: null, error: { message: "No encontrado" } };
+
+    return { data: updated, error: null };
   }
 
   async delete(id: string): Promise<{ error: any }> {
     return await this.client.from("pets").delete().eq("id", id);
   }
 
-  async update(
-    id: string,
-    petData: Partial<Pet>,
-  ): Promise<{ data: Pet | null; error: any }> {
-    const { data, error } = await this.client
+  async findByIdentity(identifier: string): Promise<Pet | null> {
+    const { data } = await this.client
       .from("pets")
-      .update(petData)
-      .eq("id", id)
-      .select()
-      .single();
-    return { data: data as Pet, error };
+      .select("*, owner:profiles(full_name, email)")
+      .or(`dua_id.eq.${identifier},microchip_id.eq.${identifier}`)
+      .maybeSingle();
+    return data as Pet;
   }
 }
