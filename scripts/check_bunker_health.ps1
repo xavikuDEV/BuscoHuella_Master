@@ -1,4 +1,4 @@
-# BuscoHuella Ecosystem - Environment Health Check v1.1
+﻿# BuscoHuella Ecosystem - Environment Health Check v1.1
 # Propósito: Validar que el entorno de desarrollo cumple los estándares del Búnker.
 
 Clear-Host
@@ -50,9 +50,10 @@ $expoStatus = Check-Tool "Expo CLI" "npx expo" $requirements["Expo"]
 # 2. Comprobación de Entorno Móvil (Android)
 Write-Host "`n📱 Comprobando capacidades nativas..." -ForegroundColor Cyan
 if (Get-Command "adb" -ErrorAction SilentlyContinue) {
-    Write-Host "✅ Android Debug Bridge (ADB) detectado." -ForegroundColor Green
-} else {
-    Write-Host "ℹ️ ADB no detectado (opcional, necesario para testear en Android físico)." -ForegroundColor Gray
+    Write-Host "✅ ADB detectado." -ForegroundColor Green
+}
+else {
+    Write-Host "i ADB no detectado (opcional para testear en Android físico)." -ForegroundColor Gray
 }
 
 Write-Host "----------------------------------------------------"
