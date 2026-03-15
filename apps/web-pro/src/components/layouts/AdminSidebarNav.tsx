@@ -1,42 +1,55 @@
 "use client";
+
+import React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useParams } from "next/navigation";
 
 export default function AdminSidebarNav() {
   const pathname = usePathname();
-  const isActive = (path: string) => pathname === path;
+  const { locale } = useParams(); // 🌐 Capturamos 'es', 'en', etc.
 
-  const navItemClasses = (path: string) => `
-    flex items-center px-4 py-3 text-sm font-bold rounded-xl transition-all duration-300 hover:scale-[1.02]
-    ${
-      isActive(path)
-        ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 shadow-[0_0_20px_rgba(6,182,212,0.15)]"
-        : "text-slate-400 hover:bg-slate-700/30 hover:text-white border border-transparent"
-    }
-  `;
+  const navItems = [
+    {
+      name: "Panel de Control",
+      href: `/${locale}/dashboard/admin`,
+      icon: "📊",
+    },
+    {
+      name: "Gestión de Mascotas",
+      href: `/${locale}/dashboard/admin/pets`,
+      icon: "🐾",
+    },
+    {
+      name: "Gestión de Usuarios",
+      href: `/${locale}/dashboard/admin/users`,
+      icon: "👥",
+    },
+    {
+      name: "Caja Negra (Logs)",
+      href: `/${locale}/dashboard/admin/logs`,
+      icon: "📓",
+    },
+  ];
 
   return (
-    <>
-      <Link
-        href="/es/dashboard/admin"
-        className={navItemClasses("/es/dashboard/admin")}
-      >
-        <span className="mr-3 text-lg">📊</span> Panel de Control
-      </Link>
-
-      <Link
-        href="/es/dashboard/admin/pets"
-        className={navItemClasses("/es/dashboard/admin/pets")}
-      >
-        <span className="mr-3 text-lg">🐾</span> Gestión de Mascotas
-      </Link>
-
-      <Link
-        href="/es/dashboard/admin/users"
-        className={navItemClasses("/es/dashboard/admin/users")}
-      >
-        <span className="mr-3 text-lg">👥</span> Gestión de Usuarios
-      </Link>
-    </>
+    <div className="space-y-1">
+      {navItems.map((item) => {
+        const isActive = pathname === item.href;
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            className={`flex items-center gap-3 px-4 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+              isActive
+                ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 shadow-[0_0_15px_rgba(6,182,212,0.1)]"
+                : "text-slate-500 hover:text-slate-300 hover:bg-slate-800/50 border border-transparent"
+            }`}
+          >
+            <span className="text-sm">{item.icon}</span>
+            {item.name}
+          </Link>
+        );
+      })}
+    </div>
   );
 }

@@ -42,7 +42,12 @@ export class PetRepository {
   async findAll(): Promise<{ data: Pet[]; error: any }> {
     const { data, error } = await this.client
       .from("pets")
-      .select(`*, owner:profiles(full_name, email)`)
+      .select(
+        `
+        *,
+        owner:profiles(username, display_name, email) 
+      `,
+      )
       .order("created_at", { ascending: false });
     return { data: (data as any[]) || [], error };
   }

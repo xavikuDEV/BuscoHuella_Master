@@ -1,6 +1,7 @@
-﻿# 🐾 Estructura del Búnker: BuscoHuella 2026
-> **Última actualización:** 15/03/2026 00:29:06
-> **Métricas:** **135** archivos · **45** TypeScript · **1** CSS · **1** SQL · **2** YAML
+# 🐾 Estructura del Búnker: BuscoHuella 2026
+>
+> **Última actualización:** 15/03/2026 14:31:43
+> **Métricas:** **142** archivos · **52** TypeScript · **1** CSS · **1** SQL · **2** YAML
 
 ---
 
@@ -38,8 +39,8 @@
 │   │   ├── 📄 app.json
 │   │   ├── 📄 App.tsx
 │   │   ├── 📄 index.ts
-│   │   ├── 📄 package.json
 │   │   ├── 📄 package-lock.json
+│   │   ├── 📄 package.json
 │   │   └── 📄 tsconfig.json
 │   └── 📁 web-pro
 │       ├── 📁 e2e
@@ -61,7 +62,9 @@
 │       │   │   └── 📄 page.tsx
 │       │   ├── 📁 components
 │       │   │   ├── 📁 dashboard
+│       │   │   │   ├── 📄 ManageLogsClient.tsx
 │       │   │   │   ├── 📄 ManagePetsClient.tsx
+│       │   │   │   ├── 📄 ManageUsersClient.tsx
 │       │   │   │   ├── 📄 PetTableActions.tsx
 │       │   │   │   └── 📄 SystemStatus.tsx
 │       │   │   ├── 📁 forms
@@ -79,8 +82,8 @@
 │       │   └── 📄 middleware.ts
 │       ├── 📄 .gitignore
 │       ├── 📄 eslint.config.mjs
-│       ├── 📄 next.config.ts
 │       ├── 📄 next-env.d.ts
+│       ├── 📄 next.config.ts
 │       ├── 📄 package.json
 │       ├── 📄 postcss.config.mjs
 │       ├── 📄 README.md
@@ -125,9 +128,15 @@
 │   ├── 📄 notion-update.mjs
 │   ├── 📄 push_bunker.ps1
 │   ├── 📄 scaffold_engines.ps1
-│   ├── 📄 sync.ps1
 │   ├── 📄 sync_drive.py
+│   ├── 📄 sync.ps1
 │   └── 📄 update-structure.ps1
+├── 📁 src
+│   └── 📁 components
+│       └── 📁 dashboard
+│           └── 📁 logs
+│               ├── 📄 LogExportButtons.tsx
+│               └── 📄 LogRow.tsx
 ├── 📁 supabase
 │   └── 📁 migrations
 │       └── 📄 0001_create_pets_table.sql

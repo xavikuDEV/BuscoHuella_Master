@@ -1,91 +1,119 @@
 export const dynamic = "force-dynamic";
 
-import { redirect } from "next/navigation";
-import { UserRole, PetRepository, UserRepository } from "@buscohuella/shared";
+import React from "react";
 import AdminLayout from "@/components/layouts/AdminLayout";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/server";
 
-export default async function AdminDashboardPage() {
-  // 🛡️ Blindaje de Seguridad
-  const user = { role: UserRole.ADMIN };
-  if (user.role !== UserRole.ADMIN) redirect("/login");
+import DashboardStats from "@/components/dashboard/home/DashboardStats";
+import ActivityChart from "@/components/dashboard/home/ActivityChart";
+import SystemTelemetry from "@/components/dashboard/home/SystemTelemetry";
+import ServiceHealth from "@/components/dashboard/home/ServiceHealth";
+import IncidentReport from "@/components/dashboard/home/IncidentReport";
+import CategoryBreakdown from "@/components/dashboard/home/CategoryBreakdown";
+import SectorSelector from "@/components/dashboard/home/SectorSelector";
+import ResourceMonitor from "@/components/dashboard/home/ResourceMonitor";
+import LiveHeader from "@/components/dashboard/home/LiveHeader";
+import RealtimeRefresher from "@/components/dashboard/home/RealtimeRefresher";
 
-  // 📡 Conexión con los Repositorios Certificados
-  const petRepo = new PetRepository(supabase);
-  const userRepo = new UserRepository(supabase);
+export default async function AdminDashboardPage(props: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ sector?: string }>;
+}) {
+  const { sector } = await props.searchParams;
+  const supabase = await createClient();
 
-  // Ejecución en paralelo para máxima eficiencia del búnker
-  const [petsRes, usersRes] = await Promise.all([
-    petRepo.findAll(),
-    userRepo.findAll(),
+  const activeSector = sector || "ALL";
+  const isGlobal = activeSector === "ALL";
+
+  // 📥 CONSULTAS DINÁMICAS MULTI-STREAM
+  let petsQuery = supabase.from("pets").select("*");
+  let usersQuery = supabase.from("profiles").select("*");
+  let incidentsQuery = supabase.from("incidents").select("*, pets(name)");
+  let logsQuery = supabase
+    .from("system_logs")
+    .select(`*, profiles:user_id ( display_name )`);
+
+  if (!isGlobal) {
+    petsQuery = petsQuery.eq("sector", activeSector);
+    usersQuery = usersQuery.eq("location_sector", activeSector);
+    incidentsQuery = incidentsQuery.eq("sector", activeSector);
+    // Los logs suelen ser globales del sistema, pero podemos filtrarlos por usuario si fuera necesario
+  }
+
+  const [petsRes, usersRes, logsRes, incidentsRes] = await Promise.all([
+    petsQuery,
+    usersQuery,
+    logsQuery.order("created_at", { ascending: false }).limit(20),
+    incidentsQuery.order("created_at", { ascending: false }).limit(10),
   ]);
 
-  const totalPets = petsRes.data?.length || 0;
-  const totalUsers = usersRes.data?.length || 0;
+  const stats = {
+    pets: petsRes.data || [],
+    users: usersRes.data || [],
+    logs: logsRes.data || [],
+    incidents: incidentsRes.data || [],
+  };
 
   return (
     <AdminLayout>
-      <div className="space-y-10">
-        <header className="relative">
-          <div className="absolute -left-4 top-0 w-1 h-12 bg-cyan-500 rounded-full shadow-[0_0_15px_rgba(6,182,212,0.5)]"></div>
-          <h2 className="text-4xl font-black text-white tracking-tighter">
-            Resumen del <span className="text-cyan-400">Dashboard</span>
-          </h2>
-          <p className="text-slate-500 mt-2 font-medium italic">
-            Integridad DUA: Nivel de confianza máximo detectado.
-          </p>
+      <RealtimeRefresher />
+      <div className="space-y-8 animate-in fade-in duration-700 pb-10">
+        <header className="flex flex-col xl:flex-row justify-between items-start xl:items-end gap-6 border-b border-slate-800/50 pb-8">
+          <div className="space-y-4">
+            <h2 className="text-6xl font-black text-white uppercase italic tracking-tighter leading-none">
+              Command <span className="text-cyan-400">Center</span>
+            </h2>
+            <div className="flex items-center gap-4">
+              <SectorSelector />
+              <span className="w-1 h-1 bg-slate-800 rounded-full" />
+              <div className="text-[10px] font-mono text-slate-600 uppercase tracking-widest bg-slate-900 px-3 py-1 rounded-md border border-slate-800">
+                Focus:{" "}
+                <span className={isGlobal ? "text-amber-500" : "text-cyan-400"}>
+                  {activeSector}
+                </span>
+              </div>
+            </div>
+          </div>
+          <LiveHeader />
         </header>
 
-        {/* Rejilla de Métricas Reales */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Mascotas DUA */}
-          <div className="relative overflow-hidden p-8 rounded-[2.5rem] bg-slate-900 border border-slate-800 group hover:border-cyan-500/50 transition-all duration-500">
-            <div className="absolute -top-4 -right-4 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-              <span className="text-9xl">🐾</span>
-            </div>
-            <p className="text-slate-500 text-sm font-bold uppercase tracking-widest">
-              Mascotas DUA
-            </p>
-            <h3 className="text-7xl font-black text-white mt-2 group-hover:text-cyan-400 transition-colors">
-              {totalPets.toString().padStart(2, "0")}
-            </h3>
-          </div>
+        <DashboardStats
+          pets={stats.pets}
+          users={stats.users}
+          sector={activeSector}
+        />
 
-          {/* Estado Búnker */}
-          <div className="p-8 rounded-[2.5rem] bg-slate-900 border border-slate-800 group hover:border-emerald-500/50 transition-all duration-500">
-            <p className="text-slate-500 text-sm font-bold uppercase tracking-widest">
-              Estado Búnker
-            </p>
-            <h3 className="text-5xl font-black text-emerald-400 mt-2 flex items-center">
-              Óptimo <span className="ml-3 text-2xl animate-pulse">🛡️</span>
-            </h3>
+        {/* 📊 GRÁFICO MULTI-STREAM CON TODOS LOS DATOS */}
+        <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
+          <div className="xl:col-span-3">
+            <ActivityChart
+              pets={stats.pets}
+              users={stats.users}
+              incidents={stats.incidents}
+              logs={stats.logs}
+            />
           </div>
-
-          {/* Nodos Red (Usuarios Reales) */}
-          <div className="relative overflow-hidden p-8 rounded-[2.5rem] bg-slate-900 border border-slate-800 group hover:border-purple-500/50 transition-all duration-500">
-            <div className="absolute -top-4 -right-4 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-              <span className="text-9xl">👥</span>
-            </div>
-            <p className="text-slate-500 text-sm font-bold uppercase tracking-widest">
-              Nodos Red
-            </p>
-            <h3 className="text-7xl font-black text-white mt-2 group-hover:text-purple-400 transition-colors">
-              {totalUsers.toString().padStart(2, "0")}
-            </h3>
+          <div className="xl:col-span-1">
+            <ResourceMonitor sector={activeSector} />
           </div>
         </div>
 
-        {/* Status de Infraestructura */}
-        <div className="p-10 rounded-[3rem] bg-slate-900/30 border border-slate-800 border-dashed flex flex-col items-center justify-center space-y-4">
-          <div className="flex gap-2">
-            <div className="w-2 h-2 rounded-full bg-cyan-500 shadow-[0_0_8px_cyan]"></div>
-            <div className="w-2 h-2 rounded-full bg-cyan-500/50"></div>
-            <div className="w-2 h-2 rounded-full bg-cyan-500/20"></div>
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-stretch">
+          <div className="lg:col-span-1">
+            <CategoryBreakdown users={stats.users} />
           </div>
-          <p className="text-slate-500 text-xs font-mono uppercase tracking-[0.4em]">
-            Conexión Segura establecida con Supabase Cluster
-          </p>
+          <div className="lg:col-span-2">
+            <IncidentReport
+              sector={activeSector}
+              initialIncidents={stats.incidents}
+            />
+          </div>
+          <div className="lg:col-span-1">
+            <SystemTelemetry logs={stats.logs} />
+          </div>
         </div>
+
+        <ServiceHealth />
       </div>
     </AdminLayout>
   );

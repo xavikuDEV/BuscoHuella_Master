@@ -1,66 +1,112 @@
-import { login } from "@/app/auth/actions";
+import React from "react";
+import { login, signup } from "@/app/auth/actions";
 
-export default function LoginPage({
+// 🛡️ Next.js 15: Definimos los tipos como Promesas
+interface LoginPageProps {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ error?: string; message?: string }>;
+}
+
+export default async function LoginPage({
+  params,
   searchParams,
-}: {
-  searchParams: { error?: string; message?: string };
-}) {
-  return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-6 font-sans">
-      <div className="w-full max-w-md space-y-8 bg-slate-900 border border-slate-800 p-10 rounded-[2.5rem] shadow-2xl relative overflow-hidden">
-        {/* Decoración Cyberpunk */}
-        <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-transparent via-cyan-500 to-transparent opacity-50"></div>
+}: LoginPageProps) {
+  // 🛰️ PROTOCOLO DE DESEMPAQUETADO (Obligatorio en Next.js 15)
+  const { locale } = await params;
+  const { error, message } = await searchParams;
 
-        <header className="text-center">
-          <h1 className="text-3xl font-black text-white tracking-tighter italic">
-            BUSCO<span className="text-cyan-400 font-black">HUELLA</span>
+  return (
+    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-6 relative overflow-hidden font-sans">
+      {/* 🧬 EFECTO DE FONDO: RADAR ACTIVO */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-500/5 rounded-full blur-[120px]" />
+        <div className="absolute top-0 left-0 w-full h-full bg-[url('/grid.svg')] opacity-10" />
+      </div>
+
+      <div className="w-full max-w-md space-y-8 relative z-10">
+        {/* 📟 CABECERA DE LA TERMINAL */}
+        <header className="text-center space-y-2">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-slate-900 border border-slate-800 rounded-2xl rotate-12 shadow-2xl mb-4 group hover:rotate-0 transition-transform duration-500">
+            <span className="text-3xl font-black text-indigo-500 -rotate-12 group-hover:rotate-0 transition-transform">
+              B
+            </span>
+          </div>
+          <h1 className="text-3xl font-black text-white tracking-tighter uppercase">
+            Acceso al <span className="text-indigo-400">Búnker</span>
           </h1>
-          <p className="text-slate-500 text-[9px] uppercase tracking-[0.4em] mt-2 font-bold">
-            Autenticación de Nodo v2.0
+          <p className="text-slate-500 text-xs font-bold uppercase tracking-[0.2em]">
+            Protocolo BuscoHuella v3.0
           </p>
         </header>
 
-        {searchParams.error && (
-          <div className="bg-rose-500/10 border border-rose-500/20 p-4 rounded-xl text-rose-500 text-xs text-center font-bold">
-            ⚠️ ERROR: {searchParams.error}
+        {/* ⚠️ ALERTA DE SISTEMA (Dinámica) */}
+        {(error || message) && (
+          <div
+            className={`p-4 rounded-2xl border text-xs font-mono animate-in fade-in slide-in-from-top-2 ${
+              error
+                ? "bg-rose-500/10 border-rose-500/20 text-rose-400"
+                : "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
+            }`}
+          >
+            <p className="flex items-center gap-2 uppercase font-black tracking-tight">
+              <span>{error ? "🚨 ERROR" : "📡 MENSAJE"}</span>
+            </p>
+            <p className="mt-1 opacity-80">{error || message}</p>
           </div>
         )}
 
-        <form action={login} className="space-y-5">
-          <div className="space-y-2">
-            <label className="text-[10px] font-black uppercase text-slate-500 ml-2 tracking-widest">
-              Email Operador
-            </label>
-            <input
-              name="email"
-              type="email"
-              required
-              className="w-full bg-slate-950 border border-slate-800 rounded-2xl px-5 py-4 text-white text-sm outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/20 transition-all placeholder:text-slate-700"
-              placeholder="nombre@ejemplo.com"
-            />
-          </div>
+        {/* 🔐 FORMULARIO DE AUTENTICACIÓN */}
+        <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 p-8 rounded-[2.5rem] shadow-2xl">
+          <form className="space-y-6">
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-4">
+                Identificador (Email)
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                required
+                placeholder="operador@buscohuella.com"
+                className="w-full bg-slate-950 border border-slate-800 rounded-2xl px-5 py-4 text-sm text-white focus:border-indigo-500/50 outline-none transition-all placeholder:text-slate-700"
+              />
+            </div>
 
-          <div className="space-y-2">
-            <label className="text-[10px] font-black uppercase text-slate-500 ml-2 tracking-widest">
-              Clave Cifrada
-            </label>
-            <input
-              name="password"
-              type="password"
-              required
-              className="w-full bg-slate-950 border border-slate-800 rounded-2xl px-5 py-4 text-white text-sm outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/20 transition-all placeholder:text-slate-700"
-              placeholder="••••••••"
-            />
-          </div>
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-4">
+                Clave de Seguridad
+              </label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                required
+                placeholder="••••••••••••"
+                className="w-full bg-slate-950 border border-slate-800 rounded-2xl px-5 py-4 text-sm text-white focus:border-indigo-500/50 outline-none transition-all placeholder:text-slate-700"
+              />
+            </div>
 
-          <button className="w-full py-5 bg-cyan-600 hover:bg-cyan-500 text-white font-black uppercase text-[10px] tracking-[0.2em] rounded-2xl transition-all shadow-lg shadow-cyan-900/20 active:scale-95 flex items-center justify-center">
-            <span>Iniciar Secuencia de Acceso</span>
-          </button>
-        </form>
+            <div className="grid grid-cols-2 gap-4 pt-4">
+              <button
+                formAction={login}
+                className="bg-indigo-600 hover:bg-indigo-500 text-white font-black py-4 rounded-2xl text-[10px] uppercase tracking-widest shadow-lg shadow-indigo-500/20 active:scale-95 transition-all"
+              >
+                Entrar 🔓
+              </button>
+              <button
+                formAction={signup}
+                className="bg-slate-800 hover:bg-slate-700 text-slate-300 font-black py-4 rounded-2xl text-[10px] uppercase tracking-widest active:scale-95 transition-all"
+              >
+                Registro
+              </button>
+            </div>
+          </form>
+        </div>
 
-        <footer className="text-center pt-4">
-          <p className="text-slate-600 text-[10px] uppercase font-bold tracking-tighter">
-            Protección de Activos DUA — 2026
+        {/* 📟 STATUS FOOTER */}
+        <footer className="text-center pt-8">
+          <p className="text-[9px] font-black text-slate-700 uppercase tracking-[0.4em]">
+            Auth_Connection: {locale.toUpperCase()}_Stable
           </p>
         </footer>
       </div>

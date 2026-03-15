@@ -1,36 +1,68 @@
 "use client";
-import React, { useEffect, useState } from "react";
+
+import { useState, useEffect } from "react";
+import { createClient } from "@/lib/supabase/client";
 
 export default function SystemStatus() {
   const [latency, setLatency] = useState<number | null>(null);
+  const [status, setStatus] = useState("Measuring...");
+  const supabase = createClient();
 
   useEffect(() => {
-    const start = Date.now();
-    fetch("/favicon.ico")
-      .then(() => {
+    const checkPulse = async () => {
+      const start = Date.now();
+      const { error } = await supabase
+        .from("system_logs")
+        .select("id")
+        .limit(1);
+
+      if (!error) {
         setLatency(Date.now() - start);
-      })
-      .catch(() => setLatency(null));
-  }, []);
+        setStatus("Activa");
+      } else {
+        setStatus("Interferencia");
+      }
+    };
+
+    checkPulse();
+    const interval = setInterval(checkPulse, 5000); // 👈 Actualiza cada 5 seg
+    return () => clearInterval(interval);
+  }, [supabase]);
 
   return (
-    <div className="fixed bottom-4 right-4 flex items-center space-x-4 px-4 py-2 bg-slate-900/80 backdrop-blur-md border border-slate-800 rounded-full text-[10px] font-bold tracking-widest uppercase z-50">
-      <div className="flex items-center">
-        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mr-2"></span>
-        <span className="text-slate-400">Conexión:</span>
-        <span className="text-emerald-400 ml-1">Activa</span>
+    <div className="flex items-center gap-8 w-full">
+      <div className="flex items-center gap-2">
+        <div
+          className={`w-1.5 h-1.5 rounded-full ${status === "Activa" ? "bg-emerald-500 animate-pulse" : "bg-rose-500"}`}
+        />
+        <div className="flex flex-col">
+          <span className="text-[7px] font-black text-slate-600 uppercase tracking-widest">
+            Conexión
+          </span>
+          <span className="text-[9px] font-bold text-slate-300 uppercase">
+            {status}
+          </span>
+        </div>
       </div>
-      <div className="w-px h-3 bg-slate-800"></div>
-      <div>
-        <span className="text-slate-400">Latencia:</span>
-        <span className="text-cyan-400 ml-1">
+
+      <div className="flex flex-col border-l border-slate-800 pl-8">
+        <span className="text-[7px] font-black text-slate-600 uppercase tracking-widest">
+          Latencia
+        </span>
+        <span
+          className={`text-[9px] font-mono font-bold ${latency && latency > 200 ? "text-amber-500" : "text-cyan-500"}`}
+        >
           {latency ? `${latency}ms` : "---"}
         </span>
       </div>
-      <div className="w-px h-3 bg-slate-800"></div>
-      <div>
-        <span className="text-slate-400">Integridad:</span>
-        <span className="text-purple-400 ml-1">DUA OK</span>
+
+      <div className="flex flex-col border-l border-slate-800 pl-8">
+        <span className="text-[7px] font-black text-slate-600 uppercase tracking-widest">
+          Integridad
+        </span>
+        <span className="text-[9px] font-bold text-emerald-500 uppercase">
+          DUA OK
+        </span>
       </div>
     </div>
   );
