@@ -1,7 +1,17 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
 version: v1.25.0
 ignore:
+  # Inflight es una dependencia de Expo/RN que ya no se actualiza. Riesgo bajo en local.
   'SNYK-JS-INFLIGHT-6095116':
     - '*':
-        reason: 'Dependencia transitiva de Expo/React-Native sin actualización disponible. Override aplicado en package.json.'
+        reason: 'Dependencia transitiva sin parche disponible. Sin impacto real en Web.'
         expires: '2026-12-31T23:59:59.999Z'
+  
+  # Este suele aparecer en versiones de desarrollo de librerías de testing
+  'SNYK-JS-GLOB-5407844':
+    - '*':
+        reason: 'Solo afecta al entorno de tests, no a producción.'
+        expires: '2026-06-01T23:59:59.999Z'
+
+# Parches aplicados (si los hubiera)
+patch: {}

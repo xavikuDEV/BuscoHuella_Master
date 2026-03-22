@@ -5,29 +5,28 @@ import { revalidatePath } from "next/cache";
 
 export async function createIncidentAction(formData: FormData) {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
 
-  if (!user) throw new Error("No autorizado");
-
-  const incidentData = {
-    title: formData.get("title") as string,
-    description: formData.get("description") as string,
-    type: formData.get("type") as any,
-    priority: formData.get("priority") as string,
-    sector_id: formData.get("sector_id") as string,
-    reporter_id: user.id,
-    status: "OPEN",
+  // 📥 Mapeo de campos: del Formulario -> a la Base de Datos
+  const rawData = {
+    message: formData.get("message") as string,
+    urgency: formData.get("urgency") as string, // LOW, MEDIUM, HIGH, CRITICAL
+    type: formData.get("type") as string, // LOST, FOUND, etc.
+    sector: formData.get("sector") as string,
+    status: "OPEN", // Valor por defecto
   };
 
-  const { error } = await supabase.from("incidents").insert(incidentData);
+  const { data, error } = await supabase
+    .from("incidents")
+    .insert([rawData])
+    .select();
 
   if (error) {
-    console.error("Error al crear incidencia:", error);
+    console.error("❌ Error en el búnker:", error.message);
     return { success: false, error: error.message };
   }
 
+  // 🔄 Forzamos la actualización de la caché del servidor
   revalidatePath("/[locale]/dashboard/admin", "page");
-  return { success: true };
+
+  return { success: true, data };
 }

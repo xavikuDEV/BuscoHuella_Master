@@ -4,6 +4,7 @@ import React from "react";
 import AdminLayout from "@/components/layouts/AdminLayout";
 import { createClient } from "@/lib/supabase/server";
 
+// Componentes del Búnker
 import DashboardStats from "@/components/dashboard/home/DashboardStats";
 import ActivityChart from "@/components/dashboard/home/ActivityChart";
 import SystemTelemetry from "@/components/dashboard/home/SystemTelemetry";
@@ -14,6 +15,7 @@ import SectorSelector from "@/components/dashboard/home/SectorSelector";
 import ResourceMonitor from "@/components/dashboard/home/ResourceMonitor";
 import LiveHeader from "@/components/dashboard/home/LiveHeader";
 import RealtimeRefresher from "@/components/dashboard/home/RealtimeRefresher";
+import LiveMap from "@/components/dashboard/home/LiveMap"; // 👈 El radar está listo
 
 export default async function AdminDashboardPage(props: {
   params: Promise<{ locale: string }>;
@@ -37,7 +39,6 @@ export default async function AdminDashboardPage(props: {
     petsQuery = petsQuery.eq("sector", activeSector);
     usersQuery = usersQuery.eq("location_sector", activeSector);
     incidentsQuery = incidentsQuery.eq("sector", activeSector);
-    // Los logs suelen ser globales del sistema, pero podemos filtrarlos por usuario si fuera necesario
   }
 
   const [petsRes, usersRes, logsRes, incidentsRes] = await Promise.all([
@@ -57,7 +58,9 @@ export default async function AdminDashboardPage(props: {
   return (
     <AdminLayout>
       <RealtimeRefresher />
+
       <div className="space-y-8 animate-in fade-in duration-700 pb-10">
+        {/* HEADER OPERATIVO */}
         <header className="flex flex-col xl:flex-row justify-between items-start xl:items-end gap-6 border-b border-slate-800/50 pb-8">
           <div className="space-y-4">
             <h2 className="text-6xl font-black text-white uppercase italic tracking-tighter leading-none">
@@ -77,13 +80,23 @@ export default async function AdminDashboardPage(props: {
           <LiveHeader />
         </header>
 
+        {/* 📊 MÉTRICAS RÁPIDAS */}
         <DashboardStats
           pets={stats.pets}
           users={stats.users}
           sector={activeSector}
         />
 
-        {/* 📊 GRÁFICO MULTI-STREAM CON TODOS LOS DATOS */}
+        {/* 📡 EL RADAR GEOTÁCTICO (MAPA A PANTALLA COMPLETA) */}
+        <div className="xl:col-span-4 h-[500px] w-full">
+          <LiveMap
+            pets={stats.pets}
+            incidents={stats.incidents}
+            sector={activeSector}
+          />
+        </div>
+
+        {/* 📈 MONITOR GLITCH Y RECURSOS */}
         <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
           <div className="xl:col-span-3">
             <ActivityChart
@@ -98,6 +111,7 @@ export default async function AdminDashboardPage(props: {
           </div>
         </div>
 
+        {/* 🛰️ MALLA DE DATOS INFERIOR */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-stretch">
           <div className="lg:col-span-1">
             <CategoryBreakdown users={stats.users} />

@@ -15,10 +15,14 @@ export default function NewIncidentModal({
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
+
     const formData = new FormData(e.currentTarget);
     const result = await createIncidentAction(formData);
+
     if (result.success) {
-      onClose();
+      onClose(); // Cerramos el modal si todo ok
+    } else {
+      alert("Error en la transmisión: " + result.error);
     }
     setLoading(false);
   }
@@ -27,21 +31,27 @@ export default function NewIncidentModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
       <div className="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-[2.5rem] p-8 shadow-2xl animate-in zoom-in duration-300">
         <h3 className="text-xl font-black text-white uppercase italic mb-6 tracking-tighter">
-          Registrar <span className="text-rose-500">Incidencia Táctica</span>
+          Emitir <span className="text-rose-500">Alerta Táctica</span>
         </h3>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          <input type="hidden" name="sector_id" value={currentSector} />
+          {/* Mapeamos sector_id a sector */}
+          <input
+            type="hidden"
+            name="sector"
+            value={currentSector === "ALL" ? "SBD-GENERAL" : currentSector}
+          />
 
           <div>
             <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-2">
-              Título del suceso
+              Mensaje del suceso
             </label>
-            <input
-              name="title"
+            <textarea
+              name="message" // Cambiado de 'title' a 'message'
               required
-              className="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-sm text-white focus:border-rose-500 outline-none transition-all"
-              placeholder="Ej: Perro avistado sin dueño..."
+              rows={3}
+              className="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-sm text-white focus:border-rose-500 outline-none transition-all resize-none"
+              placeholder="Ej: Kratos Alpha avistado en Sector 08 sin supervisión..."
             />
           </div>
 
@@ -54,18 +64,17 @@ export default function NewIncidentModal({
                 name="type"
                 className="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-sm text-white outline-none"
               >
-                <option value="LOSS">Pérdida</option>
-                <option value="SIGHTING">Avistamiento</option>
-                <option value="THEFT">Robo</option>
-                <option value="ABUSE">Maltrato</option>
+                <option value="LOST">Pérdida</option>
+                <option value="FOUND">Encontrado</option>
+                <option value="DANGER">Peligro</option>
               </select>
             </div>
             <div>
               <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-2">
-                Prioridad
+                Urgencia
               </label>
               <select
-                name="priority"
+                name="urgency"
                 className="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-sm text-white outline-none"
               >
                 <option value="LOW">Baja</option>
@@ -76,32 +85,20 @@ export default function NewIncidentModal({
             </div>
           </div>
 
-          <div>
-            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-2">
-              Descripción detallada
-            </label>
-            <textarea
-              name="description"
-              rows={3}
-              className="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-sm text-white outline-none focus:border-rose-500 resize-none"
-              placeholder="Describe lo ocurrido..."
-            />
-          </div>
-
           <div className="flex gap-4 pt-4">
             <button
               type="button"
               onClick={onClose}
               className="flex-1 px-6 py-3 rounded-2xl text-[10px] font-black uppercase text-slate-500 hover:bg-slate-800 transition-all"
             >
-              Cancelar
+              Abortar
             </button>
             <button
               type="submit"
               disabled={loading}
               className="flex-1 bg-rose-600 hover:bg-rose-500 px-6 py-3 rounded-2xl text-[10px] font-black uppercase text-white shadow-lg shadow-rose-500/20 transition-all disabled:opacity-50"
             >
-              {loading ? "Sincronizando..." : "Emitir Alerta"}
+              {loading ? "Sincronizando..." : "Confirmar Alerta"}
             </button>
           </div>
         </form>

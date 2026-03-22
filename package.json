@@ -20,17 +20,29 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.58.2",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^4.5.2",
     "autoprefixer": "^10.4.27",
-    "typescript": "^5.0.0",
+    "jsdom": "^26.1.0",
+    "msw": "^2.8.4",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "typescript": "^5.7.2",
+    "vite": "^6.4.1",
     "vite-tsconfig-paths": "^6.1.1",
     "vitest": "^4.1.0"
   },
   "pnpm": {
     "overrides": {
-      "react": "19.2.0",
-      "react-dom": "19.2.0"
+      "inflight": "^1.0.6",
+      "next": "16.2.0",
+      "react": "19.2.3",
+      "react-dom": "19.2.3"
     },
     "ignoredBuiltDependencies": [
+      "esbuild",
+      "msw",
       "sharp",
       "unrs-resolver"
     ]

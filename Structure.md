@@ -1,7 +1,6 @@
 # 🐾 Estructura del Búnker: BuscoHuella 2026
->
-> **Última actualización:** 15/03/2026 14:31:43
-> **Métricas:** **142** archivos · **52** TypeScript · **1** CSS · **1** SQL · **2** YAML
+> **Última actualización:** 22/03/2026 21:56:43
+> **Métricas:** **172** archivos · **81** TypeScript · **1** CSS · **1** SQL · **2** YAML
 
 ---
 
@@ -39,11 +38,11 @@
 │   │   ├── 📄 app.json
 │   │   ├── 📄 App.tsx
 │   │   ├── 📄 index.ts
-│   │   ├── 📄 package-lock.json
 │   │   ├── 📄 package.json
 │   │   └── 📄 tsconfig.json
 │   └── 📁 web-pro
 │       ├── 📁 e2e
+│       │   ├── 📄 dashboard.test.ts
 │       │   └── 📄 smoke.test.ts
 │       ├── 📁 public
 │       │   ├── 📄 file.svg
@@ -52,6 +51,15 @@
 │       │   ├── 📄 vercel.svg
 │       │   └── 📄 window.svg
 │       ├── 📁 src
+│       │   ├── 📁 __tests__
+│       │   │   ├── 📁 components
+│       │   │   │   ├── 📄 IncidentReport.test.tsx
+│       │   │   │   ├── 📄 LiveMap.test.tsx
+│       │   │   │   └── 📄 NewIncidentModal.test.tsx
+│       │   │   ├── 📁 unit
+│       │   │   │   ├── 📄 incidentUtils.test.ts
+│       │   │   │   └── 📄 sectorFiltering.test.ts
+│       │   │   └── 📄 setup.ts
 │       │   ├── 📁 app
 │       │   │   ├── 📁 [locale]
 │       │   │   ├── 📁 auth
@@ -62,6 +70,28 @@
 │       │   │   └── 📄 page.tsx
 │       │   ├── 📁 components
 │       │   │   ├── 📁 dashboard
+│       │   │   │   ├── 📁 home
+│       │   │   │   │   ├── 📄 ActivityChart.tsx
+│       │   │   │   │   ├── 📄 CategoryBreakdown.tsx
+│       │   │   │   │   ├── 📄 DashboardStats.tsx
+│       │   │   │   │   ├── 📄 IncidentReport.tsx
+│       │   │   │   │   ├── 📄 LiveHeader.tsx
+│       │   │   │   │   ├── 📄 LiveMap.tsx
+│       │   │   │   │   ├── 📄 MapInner.tsx
+│       │   │   │   │   ├── 📄 NewIncidentModal.tsx
+│       │   │   │   │   ├── 📄 RealtimeRefresher.tsx
+│       │   │   │   │   ├── 📄 ResourceMonitor.tsx
+│       │   │   │   │   ├── 📄 SectorSelector.tsx
+│       │   │   │   │   ├── 📄 ServiceHealth.tsx
+│       │   │   │   │   ├── 📄 SystemTelemetry.tsx
+│       │   │   │   │   └── 📄 ThreatMonitor.tsx
+│       │   │   │   ├── 📁 logs
+│       │   │   │   │   ├── 📄 LogExportButtons.tsx
+│       │   │   │   │   └── 📄 LogRow.tsx
+│       │   │   │   ├── 📁 pets
+│       │   │   │   │   ├── 📄 PetDetailHeader.tsx
+│       │   │   │   │   ├── 📄 PetHealthHistory.tsx
+│       │   │   │   │   └── 📄 PetQRCard.tsx
 │       │   │   │   ├── 📄 ManageLogsClient.tsx
 │       │   │   │   ├── 📄 ManagePetsClient.tsx
 │       │   │   │   ├── 📄 ManageUsersClient.tsx
@@ -74,8 +104,10 @@
 │       │   │       └── 📄 AdminSidebarNav.tsx
 │       │   ├── 📁 lib
 │       │   │   ├── 📁 supabase
+│       │   │   │   ├── 📄 client.ts
 │       │   │   │   ├── 📄 middleware.ts
 │       │   │   │   └── 📄 server.ts
+│       │   │   ├── 📄 incidentUtils.ts
 │       │   │   └── 📄 supabase.ts
 │       │   ├── 📁 tests
 │       │   │   └── 📄 connectivity.test.ts
@@ -101,6 +133,7 @@
 │   ├── 📁 shared-core
 │   │   ├── 📁 src
 │   │   │   ├── 📁 models
+│   │   │   │   ├── 📄 incident.ts
 │   │   │   │   ├── 📄 pet.ts
 │   │   │   │   ├── 📄 user.ts
 │   │   │   │   └── 📄 UserRoles.ts
@@ -131,12 +164,6 @@
 │   ├── 📄 sync_drive.py
 │   ├── 📄 sync.ps1
 │   └── 📄 update-structure.ps1
-├── 📁 src
-│   └── 📁 components
-│       └── 📁 dashboard
-│           └── 📁 logs
-│               ├── 📄 LogExportButtons.tsx
-│               └── 📄 LogRow.tsx
 ├── 📁 supabase
 │   └── 📁 migrations
 │       └── 📄 0001_create_pets_table.sql
@@ -151,6 +178,7 @@
 ├── 📄 .snyk
 ├── 📄 agents.md
 ├── 📄 ARCHITECT_CONTEXT.md
+├── 📄 ARCHITECTURE.md
 ├── 📄 CONTRIBUTORS.md
 ├── 📄 credentials.json
 ├── 📄 package.json
@@ -159,5 +187,6 @@
 ├── 📄 postcss.config.mjs
 ├── 📄 README.md
 ├── 📄 ROADMAP_VISION.md
+├── 📄 SECURITY_MODEL.md
 ├── 📄 token.json
 └── 📄 vitest.config.mts

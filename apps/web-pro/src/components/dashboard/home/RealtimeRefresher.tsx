@@ -9,30 +9,25 @@ export default function RealtimeRefresher() {
   const supabase = createClient();
 
   useEffect(() => {
-    // Escuchar CUALQUIER cambio en las tablas críticas
+    console.log("[📡] Iniciando receptor de telemetría...");
+
     const channel = supabase
-      .channel("schema-db-changes")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "pets" },
-        () => router.refresh(),
-      )
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "incidents" },
-        () => router.refresh(),
-      )
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "system_logs" },
-        () => router.refresh(),
-      )
-      .subscribe();
+      .channel("bunker-global-sync")
+      .on("postgres_changes", { event: "*", schema: "public" }, (payload) => {
+        console.log(`[🔥] CAMBIO DETECTADO EN: ${payload.table}`, payload);
+        router.refresh();
+      })
+      .subscribe((status, err) => {
+        // Esto nos dirá si la conexión es exitosa o si Supabase nos rechaza
+        console.log(`[📶] Estado de sintonía: ${status}`);
+        if (err) console.error("[❌] Error de radio:", err);
+      });
 
     return () => {
+      console.log("[🔌] Desconectando sensores...");
       supabase.removeChannel(channel);
     };
   }, [router, supabase]);
 
-  return null; // Es un componente de lógica, no renderiza nada
+  return null;
 }
