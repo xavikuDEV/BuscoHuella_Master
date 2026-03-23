@@ -3,7 +3,7 @@
 > **"La identidad es protección. La información es seguridad."**
 > **Estado:** Fase 2 - Data Modeling (DUA Implementation)
 > **Nodo Maestro:** Sabadell Alpha | **Protocolo:** DUA v2.1
-> **Sincronización:** 15 de Marzo, 2026
+> **Sincronización:** 24 de Marzo, 2026
 
 ---
 
@@ -71,6 +71,7 @@ Monitorización del despliegue del protocolo DUA en el Nodo Sabadell.
 - [x] **Sincronización por URL:** Filtros reactivos para control sectorial global.
 - [x] **DUA Hash Engine:** Generación de identificadores únicos inmutables.
 - [x] **Audit Logs:** Trazabilidad de operaciones por Archon/Operador.
+- [x] **Centro de Inteligencia de Incidencias v1.0:** Archivo Central con filtrado en servidor, búsqueda universal reactiva (Mensaje, Sector, REF_ID) con columna virtual `id_search` + `pg_trgm`, filtrado por rango de fechas, acciones masivas (resolución/purga en bloque), exportación CSV y menú social. (`e5bf9d3`)
 
 ---
 
