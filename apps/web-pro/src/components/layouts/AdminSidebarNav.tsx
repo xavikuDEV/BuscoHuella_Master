@@ -6,13 +6,18 @@ import { usePathname, useParams } from "next/navigation";
 
 export default function AdminSidebarNav() {
   const pathname = usePathname();
-  const { locale } = useParams(); // 🌐 Capturamos 'es', 'en', etc.
+  const { locale } = useParams();
 
   const navItems = [
     {
       name: "Panel de Control",
       href: `/${locale}/dashboard/admin`,
       icon: "📊",
+    },
+    {
+      name: "Archivo Incidencias", // 🚨 NUEVA PESTAÑA
+      href: `/${locale}/dashboard/admin/incidents`,
+      icon: "🚨",
     },
     {
       name: "Gestión de Mascotas",

@@ -74,3 +74,102 @@ export async function signup(formData: FormData) {
   // Redirigimos avisando que debe verificar su email
   redirect("/es/login?message=check-email");
 }
+
+/**
+ * 🛰️ ACCIÓN: Resolver Incidente + Registro de Log
+ */
+export async function resolveIncidentAction(incidentId: string) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) throw new Error("Sesión expirada");
+
+  const { error } = await supabase
+    .from("incidents")
+    .update({ status: "RESOLVED" })
+    .eq("id", incidentId);
+
+  if (error) throw new Error(error.message);
+
+  // 📓 Registro en Bitácora
+  await supabase.from("system_logs").insert({
+    user_id: user.id,
+    action: "INCIDENT_RESOLVED",
+    details: `ID: ${incidentId}`,
+    severity: "INFO",
+  });
+
+  // 🔄 REVALIDACIÓN FORZADA
+  revalidatePath("/es/dashboard/admin", "page");
+  revalidatePath("/[locale]/dashboard/admin", "layout");
+}
+
+export async function deleteIncidentAction(incidentId: string) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Acceso denegado");
+
+  const { error } = await supabase
+    .from("incidents")
+    .delete()
+    .eq("id", incidentId);
+
+  if (error) throw new Error(error.message);
+
+  await supabase.from("system_logs").insert({
+    user_id: user.id,
+    action: "INCIDENT_DELETED",
+    details: `Eliminado: ${incidentId}`,
+    severity: "WARNING",
+  });
+
+  revalidatePath("/es/dashboard/admin", "page");
+  revalidatePath("/[locale]/dashboard/admin", "layout");
+}
+
+/**
+ * 🛰️ ACCIÓN: Resolución Masiva
+ */
+export async function bulkResolveIncidentsAction(ids: string[]) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("No autorizado");
+
+  const { error } = await supabase
+    .from('incidents')
+    .update({ status: 'RESOLVED' })
+    .in('id', ids);
+
+  if (error) throw error;
+
+  await supabase.from('system_logs').insert({
+    user_id: user.id,
+    action: 'BULK_RESOLVE',
+    details: `Se resolvieron ${ids.length} incidentes en bloque.`,
+    severity: 'INFO'
+  });
+
+  revalidatePath('/[locale]/dashboard/admin/incidents', 'page');
+}
+
+/**
+ * 🧨 ACCIÓN: Purga Masiva
+ */
+export async function bulkDeleteIncidentsAction(ids: string[]) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("No autorizado");
+
+  const { error } = await supabase
+    .from('incidents')
+    .delete()
+    .in('id', ids);
+
+  if (error) throw error;
+
+  revalidatePath('/[locale]/dashboard/admin/incidents', 'page');
+}
