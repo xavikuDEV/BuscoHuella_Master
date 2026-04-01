@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import React from "react";
-import AdminLayout from "@/components/layouts/AdminLayout";
+import AdminLayout from "@/components/dashboard/layouts/AdminLayout";
 import { createClient } from "@/lib/supabase/server";
 
 // Componentes del Búnker
@@ -15,11 +15,11 @@ import SectorSelector from "@/components/dashboard/home/SectorSelector";
 import ResourceMonitor from "@/components/dashboard/home/ResourceMonitor";
 import LiveHeader from "@/components/dashboard/home/LiveHeader";
 import RealtimeRefresher from "@/components/dashboard/home/RealtimeRefresher";
-import LiveMap from "@/components/dashboard/home/LiveMap"; // 👈 El radar está listo
+import LiveMap from "@/components/dashboard/home/LiveMap";
 
 export default async function AdminDashboardPage(props: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ sector?: string }>;
+  searchParams: Promise<{ sector?: string; sort?: string; filter?: string }>;
 }) {
   const { sector } = await props.searchParams;
   const supabase = await createClient();
@@ -27,40 +27,54 @@ export default async function AdminDashboardPage(props: {
   const activeSector = sector || "ALL";
   const isGlobal = activeSector === "ALL";
 
-  // 📥 CONSULTAS DINÁMICAS MULTI-STREAM
-  let petsQuery = supabase.from("pets").select("*");
-  let usersQuery = supabase.from("profiles").select("*");
-  let incidentsQuery = supabase.from("incidents").select("*, pets(name)");
-  let logsQuery = supabase
-    .from("system_logs")
-    .select(`*, profiles:user_id ( display_name )`);
+  // 📥 1. CONSULTA PARA LA TABLA (Más reciente/crítico)
+  let incidentsTableQuery = supabase
+    .from("incidents")
+    .select("*, pets(name)")
+    .eq("status", "ACTIVE")
+    .order("urgency", { ascending: false })
+    .order("created_at", { ascending: false })
+    .limit(20);
 
+  // 📥 2. CONSULTA PARA EL RADAR (Visión amplia)
+  let incidentsMapQuery = supabase
+    .from("incidents")
+    .select("*, pets(name)")
+    .eq("status", "ACTIVE")
+    .limit(100);
+
+  // Filtrado táctico por sector
   if (!isGlobal) {
-    petsQuery = petsQuery.eq("sector", activeSector);
-    usersQuery = usersQuery.eq("location_sector", activeSector);
-    incidentsQuery = incidentsQuery.eq("sector", activeSector);
+    incidentsTableQuery = incidentsTableQuery.eq("sector", activeSector);
+    incidentsMapQuery = incidentsMapQuery.eq("sector", activeSector);
   }
 
-  const [petsRes, usersRes, logsRes, incidentsRes] = await Promise.all([
-    petsQuery,
-    usersQuery,
-    logsQuery.order("created_at", { ascending: false }).limit(20),
-    incidentsQuery.order("created_at", { ascending: false }).limit(10),
+  // 📡 Ejecución en paralelo masiva (Carga de datos del Búnker)
+  const [petsRes, usersRes, logsRes, tableRes, mapRes] = await Promise.all([
+    supabase.from("pets").select("*"),
+    supabase.from("profiles").select("*"),
+    supabase
+      .from("system_logs")
+      .select(`*, profiles:user_id(display_name)`)
+      .order("created_at", { ascending: false })
+      .limit(20),
+    incidentsTableQuery,
+    incidentsMapQuery,
   ]);
 
   const stats = {
     pets: petsRes.data || [],
     users: usersRes.data || [],
     logs: logsRes.data || [],
-    incidents: incidentsRes.data || [],
+    incidentsTable: tableRes.data || [],
+    incidentsMap: mapRes.data || [],
   };
 
   return (
     <AdminLayout>
       <RealtimeRefresher />
 
-      <div className="space-y-8 animate-in fade-in duration-700 pb-10">
-        {/* HEADER OPERATIVO */}
+      <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000 pb-10">
         <header className="flex flex-col xl:flex-row justify-between items-start xl:items-end gap-6 border-b border-slate-800/50 pb-8">
           <div className="space-y-4">
             <h2 className="text-6xl font-black text-white uppercase italic tracking-tighter leading-none">
@@ -80,29 +94,28 @@ export default async function AdminDashboardPage(props: {
           <LiveHeader />
         </header>
 
-        {/* 📊 MÉTRICAS RÁPIDAS */}
+        {/* 📊 STATS: Aquí pasamos el ARRAY completo para evitar el error de tipos */}
         <DashboardStats
           pets={stats.pets}
           users={stats.users}
+          incidents={stats.incidentsMap}
           sector={activeSector}
         />
 
-        {/* 📡 EL RADAR GEOTÁCTICO (MAPA A PANTALLA COMPLETA) */}
-        <div className="xl:col-span-4 h-[500px] w-full">
+        <div className="xl:col-span-4 h-[500px] w-full rounded-[3rem] overflow-hidden border border-slate-800/50 shadow-2xl">
           <LiveMap
             pets={stats.pets}
-            incidents={stats.incidents}
+            incidents={stats.incidentsMap}
             sector={activeSector}
           />
         </div>
 
-        {/* 📈 MONITOR GLITCH Y RECURSOS */}
         <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
           <div className="xl:col-span-3">
             <ActivityChart
               pets={stats.pets}
               users={stats.users}
-              incidents={stats.incidents}
+              incidents={stats.incidentsMap}
               logs={stats.logs}
             />
           </div>
@@ -111,7 +124,6 @@ export default async function AdminDashboardPage(props: {
           </div>
         </div>
 
-        {/* 🛰️ MALLA DE DATOS INFERIOR */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-stretch">
           <div className="lg:col-span-1">
             <CategoryBreakdown users={stats.users} />
@@ -119,7 +131,7 @@ export default async function AdminDashboardPage(props: {
           <div className="lg:col-span-2">
             <IncidentReport
               sector={activeSector}
-              initialIncidents={stats.incidents}
+              initialIncidents={stats.incidentsTable}
             />
           </div>
           <div className="lg:col-span-1">

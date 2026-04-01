@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import React from "react";
-import AdminLayout from "@/components/layouts/AdminLayout";
+import AdminLayout from "@/components/dashboard/layouts/AdminLayout";
 import { UserRepository, UserProfile, UserRole } from "@buscohuella/shared";
 import { createClient } from "@/lib/supabase/server";
 // 🛡️ REVISA ESTA IMPORTACIÓN: Que sea ManageUsersClient y NO ManageLogsClient

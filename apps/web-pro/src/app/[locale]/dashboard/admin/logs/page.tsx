@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import React from "react";
-import AdminLayout from "@/components/layouts/AdminLayout";
+import AdminLayout from "@/components/dashboard/layouts/AdminLayout";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function LogsPage() {

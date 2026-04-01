@@ -5,12 +5,14 @@ import React from "react";
 interface DashboardStatsProps {
   pets: any[];
   users: any[];
-  sector?: string; // 👈 Opcional para mostrar en el UI
+  incidents: any[]; // 👈 Añadimos esto
+  sector?: string;
 }
 
 export default function DashboardStats({
   pets,
   users,
+  incidents, // 👈 Lo recibimos aquí
   sector = "SBD-08",
 }: DashboardStatsProps) {
   const stats = [
@@ -32,7 +34,12 @@ export default function DashboardStats({
       icon: "📍",
       color: "text-emerald-500",
     },
-    { label: "Alertas_Red", value: 0, icon: "⚠️", color: "text-rose-500" },
+    {
+      label: "Alertas_Red",
+      value: incidents.length, // 👈 Ahora es real
+      icon: "⚠️",
+      color: "text-rose-500",
+    },
   ];
 
   return (

@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import React from "react";
-import AdminLayout from "@/components/layouts/AdminLayout";
+import AdminLayout from "@/components/dashboard/layouts/AdminLayout"; // 👈 IMPORT CORREGIDO
 import { createClient } from "@/lib/supabase/server";
 import IncidentsTableContainer from "./IncidentsTableContainer";
 
@@ -38,18 +38,13 @@ export default async function IncidentsArchivePage(props: {
     .from("incidents")
     .select("*, pets(name)", { count: "exact" });
 
-  // 🛡️ Filtros Básicos
   if (status !== "ALL") query = query.eq("status", status);
   if (urgency !== "ALL") query = query.eq("urgency", urgency);
-
-  // 🕒 Filtro de Rango de Fechas
   if (start) query = query.gte("created_at", `${start}T00:00:00`);
   if (end) query = query.lte("created_at", `${end}T23:59:59`);
 
-  // 🔍 BÚSQUEDA UNIVERSAL (ID + MENSAJE + SECTOR)
   if (q) {
     const term = q.replace("#", "").trim();
-    // 🔍 Usamos id_search (la columna TEXT que creamos en SQL) para evitar errores de UUID
     query = query.or(
       `message.ilike.%${term}%,sector.ilike.%${term}%,id_search.ilike.%${term}%`,
     );
@@ -62,17 +57,16 @@ export default async function IncidentsArchivePage(props: {
   } = await query.order(sort, { ascending: order === "asc" }).range(from, to);
 
   if (error) console.error("❌ Error Radar:", error.message);
-
   const totalPages = Math.ceil((count || 0) / limit);
 
   return (
     <AdminLayout>
-      <div className="space-y-8 animate-in fade-in duration-700">
+      <div className="space-y-8 animate-in fade-in duration-700 p-10">
         <div className="flex flex-col gap-1">
-          <h2 className="text-5xl font-black text-white uppercase italic tracking-tighter">
+          <h2 className="text-5xl font-black text-white uppercase italic tracking-tighter leading-none">
             Archivo <span className="text-cyan-400">Central</span>
           </h2>
-          <p className="text-[10px] font-mono text-slate-500 uppercase tracking-[0.3em]">
+          <p className="text-[10px] font-mono text-slate-500 uppercase tracking-[0.3em] mt-2">
             Database_Intel // {count || 0} Registros_Detectados
           </p>
         </div>

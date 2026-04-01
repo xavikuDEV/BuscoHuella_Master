@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import React from "react";
-import AdminLayout from "@/components/layouts/AdminLayout";
+import AdminLayout from "@/components/dashboard/layouts/AdminLayout";
 import ManagePetsClient from "@/components/dashboard/ManagePetsClient";
 import { createClient } from "@/lib/supabase/server";
 import { logSystemEvent } from "../logs/actions";

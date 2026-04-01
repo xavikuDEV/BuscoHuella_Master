@@ -1,6 +1,6 @@
 # 🐾 Estructura del Búnker: BuscoHuella 2026
-> **Última actualización:** 22/03/2026 21:56:43
-> **Métricas:** **172** archivos · **81** TypeScript · **1** CSS · **1** SQL · **2** YAML
+> **Última actualización:** 01/04/2026 15:05:46
+> **Métricas:** **181** archivos · **90** TypeScript · **1** CSS · **1** SQL · **2** YAML
 
 ---
 
@@ -78,13 +78,18 @@
 │       │   │   │   │   ├── 📄 LiveHeader.tsx
 │       │   │   │   │   ├── 📄 LiveMap.tsx
 │       │   │   │   │   ├── 📄 MapInner.tsx
+│       │   │   │   │   ├── 📄 MapSelectorInner.tsx
 │       │   │   │   │   ├── 📄 NewIncidentModal.tsx
 │       │   │   │   │   ├── 📄 RealtimeRefresher.tsx
 │       │   │   │   │   ├── 📄 ResourceMonitor.tsx
+│       │   │   │   │   ├── 📄 SectorCanvas.tsx
 │       │   │   │   │   ├── 📄 SectorSelector.tsx
 │       │   │   │   │   ├── 📄 ServiceHealth.tsx
 │       │   │   │   │   ├── 📄 SystemTelemetry.tsx
 │       │   │   │   │   └── 📄 ThreatMonitor.tsx
+│       │   │   │   ├── 📁 layouts
+│       │   │   │   │   ├── 📄 AdminLayout.tsx
+│       │   │   │   │   └── 📄 AdminSidebarNav.tsx
 │       │   │   │   ├── 📁 logs
 │       │   │   │   │   ├── 📄 LogExportButtons.tsx
 │       │   │   │   │   └── 📄 LogRow.tsx
@@ -100,15 +105,14 @@
 │       │   │   ├── 📁 forms
 │       │   │   │   └── 📄 PetRegistrationForm.tsx
 │       │   │   └── 📁 layouts
-│       │   │       ├── 📄 AdminLayout.tsx
-│       │   │       └── 📄 AdminSidebarNav.tsx
 │       │   ├── 📁 lib
 │       │   │   ├── 📁 supabase
 │       │   │   │   ├── 📄 client.ts
 │       │   │   │   ├── 📄 middleware.ts
 │       │   │   │   └── 📄 server.ts
 │       │   │   ├── 📄 incidentUtils.ts
-│       │   │   └── 📄 supabase.ts
+│       │   │   ├── 📄 supabase.ts
+│       │   │   └── 📄 utils.ts
 │       │   ├── 📁 tests
 │       │   │   └── 📄 connectivity.test.ts
 │       │   └── 📄 middleware.ts
