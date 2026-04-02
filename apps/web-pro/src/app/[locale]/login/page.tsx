@@ -1,5 +1,5 @@
 import React from "react";
-import { login, signup } from "@/app/auth/actions";
+import { login, signup } from "@/lib/actions/auth.actions";
 
 // 🛡️ Next.js 15: Definimos los tipos como Promesas
 interface LoginPageProps {

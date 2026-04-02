@@ -16,6 +16,7 @@ import ResourceMonitor from "@/components/dashboard/home/ResourceMonitor";
 import LiveHeader from "@/components/dashboard/home/LiveHeader";
 import RealtimeRefresher from "@/components/dashboard/home/RealtimeRefresher";
 import LiveMap from "@/components/dashboard/home/LiveMap";
+import CommandCenterClient from "@/components/dashboard/home/CommandCenterClient";
 
 export default async function AdminDashboardPage(props: {
   params: Promise<{ locale: string }>;
@@ -102,13 +103,12 @@ export default async function AdminDashboardPage(props: {
           sector={activeSector}
         />
 
-        <div className="xl:col-span-4 h-[500px] w-full rounded-[3rem] overflow-hidden border border-slate-800/50 shadow-2xl">
-          <LiveMap
-            pets={stats.pets}
-            incidents={stats.incidentsMap}
-            sector={activeSector}
-          />
-        </div>
+        {/* 🗺️ COMMAND CENTER: Grid Táctico + Click-to-Alert + Filtros */}
+        <CommandCenterClient
+          pets={stats.pets}
+          incidents={stats.incidentsMap}
+          sector={activeSector}
+        />
 
         <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
           <div className="xl:col-span-3">

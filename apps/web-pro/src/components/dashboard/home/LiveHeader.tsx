@@ -3,15 +3,18 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 
-export default function LiveHeader() {
-  // 🛡️ Inicializamos en null para evitar que el servidor y el cliente intenten adivinar la hora
+interface LiveHeaderProps {
+  cityName?: string | null;
+}
+
+export default function LiveHeader({ cityName }: LiveHeaderProps) {
   const [time, setTime] = useState<Date | null>(null);
   const [mounted, setMounted] = useState(false);
   const [latency, setLatency] = useState<number | null>(null);
   const supabase = createClient();
 
   useEffect(() => {
-    setMounted(true); // Marcamos que el componente ya está en el cliente
+    setMounted(true);
     setTime(new Date());
 
     const timer = setInterval(() => setTime(new Date()), 1000);
@@ -30,8 +33,6 @@ export default function LiveHeader() {
     };
   }, [supabase]);
 
-  // Si no está montado, renderizamos un placeholder invisible con la misma estructura
-  // Esto evita que React vea diferencias entre el HTML del servidor y el del cliente.
   if (!mounted || !time) {
     return (
       <div className="flex gap-8 font-mono opacity-0">
@@ -39,6 +40,13 @@ export default function LiveHeader() {
       </div>
     );
   }
+
+  // Generamos el código de 3 letras basado en la ciudad o "GEN" (General)
+  const cityCode = cityName
+    ? cityName.length > 3
+      ? cityName.substring(0, 3).toUpperCase()
+      : cityName.toUpperCase()
+    : "SBD";
 
   return (
     <div className="flex gap-8 font-mono animate-in fade-in duration-500">
@@ -58,7 +66,7 @@ export default function LiveHeader() {
         </p>
         <p className="text-slate-400 text-xs font-black uppercase italic tracking-tighter">
           {time.toLocaleTimeString()}{" "}
-          <span className="text-slate-700 ml-1">SBD</span>
+          <span className="text-cyan-500 ml-1 font-bold">{cityCode}</span>
         </p>
       </div>
     </div>

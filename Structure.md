@@ -1,6 +1,6 @@
 # 🐾 Estructura del Búnker: BuscoHuella 2026
-> **Última actualización:** 01/04/2026 15:05:46
-> **Métricas:** **181** archivos · **90** TypeScript · **1** CSS · **1** SQL · **2** YAML
+> **Última actualización:** 02/04/2026 23:55:02
+> **Métricas:** **212** archivos · **112** TypeScript · **1** CSS · **1** SQL · **2** YAML
 
 ---
 
@@ -12,6 +12,7 @@
 │   │   ├── 📄 cloud-devops.md
 │   │   ├── 📄 data-integrator.md
 │   │   ├── 📄 db-specialist.md
+│   │   ├── 📄 geo_import_skill.md
 │   │   ├── 📄 mobile-expert.md
 │   │   ├── 📄 notion_sync.md
 │   │   ├── 📄 orchestrator.md
@@ -63,7 +64,6 @@
 │       │   ├── 📁 app
 │       │   │   ├── 📁 [locale]
 │       │   │   ├── 📁 auth
-│       │   │   │   └── 📄 actions.ts
 │       │   │   ├── 📄 favicon.ico
 │       │   │   ├── 📄 globals.css
 │       │   │   ├── 📄 layout.tsx
@@ -71,12 +71,19 @@
 │       │   ├── 📁 components
 │       │   │   ├── 📁 dashboard
 │       │   │   │   ├── 📁 home
+│       │   │   │   │   ├── 📁 geo-filter
+│       │   │   │   │   │   ├── 📄 GeoSelect.tsx
+│       │   │   │   │   │   ├── 📄 index.tsx
+│       │   │   │   │   │   ├── 📄 SearchInput.tsx
+│       │   │   │   │   │   └── 📄 useGeoHierarchy.ts
 │       │   │   │   │   ├── 📄 ActivityChart.tsx
 │       │   │   │   │   ├── 📄 CategoryBreakdown.tsx
+│       │   │   │   │   ├── 📄 CommandCenterClient.tsx
 │       │   │   │   │   ├── 📄 DashboardStats.tsx
 │       │   │   │   │   ├── 📄 IncidentReport.tsx
 │       │   │   │   │   ├── 📄 LiveHeader.tsx
 │       │   │   │   │   ├── 📄 LiveMap.tsx
+│       │   │   │   │   ├── 📄 MapClickHandler.tsx
 │       │   │   │   │   ├── 📄 MapInner.tsx
 │       │   │   │   │   ├── 📄 MapSelectorInner.tsx
 │       │   │   │   │   ├── 📄 NewIncidentModal.tsx
@@ -86,7 +93,18 @@
 │       │   │   │   │   ├── 📄 SectorSelector.tsx
 │       │   │   │   │   ├── 📄 ServiceHealth.tsx
 │       │   │   │   │   ├── 📄 SystemTelemetry.tsx
-│       │   │   │   │   └── 📄 ThreatMonitor.tsx
+│       │   │   │   │   ├── 📄 TacticalGridLayer.tsx
+│       │   │   │   │   ├── 📄 ThreatMonitor.tsx
+│       │   │   │   │   └── 📄 ZonesClientWrapper.tsx
+│       │   │   │   ├── 📁 incidents
+│       │   │   │   │   └── 📁 detail
+│       │   │   │   │       ├── 📄 IncidentActions.tsx
+│       │   │   │   │       ├── 📄 IncidentChat.tsx
+│       │   │   │   │       ├── 📄 IncidentHeader.tsx
+│       │   │   │   │       ├── 📄 IncidentIssuerInfo.tsx
+│       │   │   │   │       ├── 📄 IncidentMediaVault.tsx
+│       │   │   │   │       ├── 📄 IncidentTacticalMap.tsx
+│       │   │   │   │       └── 📄 IncidentTimeline.tsx
 │       │   │   │   ├── 📁 layouts
 │       │   │   │   │   ├── 📄 AdminLayout.tsx
 │       │   │   │   │   └── 📄 AdminSidebarNav.tsx
@@ -106,6 +124,9 @@
 │       │   │   │   └── 📄 PetRegistrationForm.tsx
 │       │   │   └── 📁 layouts
 │       │   ├── 📁 lib
+│       │   │   ├── 📁 actions
+│       │   │   │   ├── 📄 auth.actions.ts
+│       │   │   │   └── 📄 incidents.actions.ts
 │       │   │   ├── 📁 supabase
 │       │   │   │   ├── 📄 client.ts
 │       │   │   │   ├── 📄 middleware.ts
@@ -133,6 +154,18 @@
 │   └── 📄 roadmap.md
 ├── 📁 logs
 ├── 📁 packages
+│   ├── 📁 mcp-geo-server
+│   │   ├── 📁 scripts
+│   │   │   └── 📄 call-import-jurisdiction.mjs
+│   │   ├── 📁 src
+│   │   │   ├── 📁 lib
+│   │   │   │   ├── 📄 osm.ts
+│   │   │   │   └── 📄 supabase.ts
+│   │   │   ├── 📁 tools
+│   │   │   │   └── 📄 import-city.ts
+│   │   │   └── 📄 index.ts
+│   │   ├── 📄 package.json
+│   │   └── 📄 tsconfig.json
 │   ├── 📁 shared-config
 │   ├── 📁 shared-core
 │   │   ├── 📁 src

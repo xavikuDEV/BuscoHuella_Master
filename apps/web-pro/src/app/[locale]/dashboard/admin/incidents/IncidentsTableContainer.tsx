@@ -27,7 +27,7 @@ import {
   deleteIncidentAction,
   bulkResolveIncidentsAction,
   bulkDeleteIncidentsAction,
-} from "@/app/auth/actions";
+} from "@/lib/actions/incidents.actions";
 import IncidentsFilters from "./IncidentsFilters";
 
 export default function IncidentsTableContainer({

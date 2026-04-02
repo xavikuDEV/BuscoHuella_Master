@@ -21,9 +21,20 @@ export interface Incident {
   urgency: IncidentUrgency;
   status: string;
   message: string;
-  sector: string;
+  sector_id?: string; // Usamos ID para relaciones
   pet_id?: string;
   reporter_id: string;
-  lat?: number;
-  lng?: number;
+  lat: number;
+  lng: number;
+  // --- NUEVOS CAMPOS TÁCTICOS ---
+  photos?: string[];
+  documents?: { name: string; url: string }[];
+  resolved_at?: string;
+  resolved_by?: string;
+  derivation_target?: string; // NGO o Entidad
+  reporter_details?: {
+    full_name: string;
+    role: string;
+    avatar_url?: string;
+  };
 }
