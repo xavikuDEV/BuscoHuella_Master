@@ -8,7 +8,7 @@ export default function IncidentTimeline({ incident }: { incident: any }) {
     <div className="space-y-6">
       <div className="flex items-center gap-2 px-2 italic">
         <Clock size={14} className="text-cyan-500" />
-        <span className="text-[10px] font-black text-white uppercase tracking-widest text-cyan-500/80">
+        <span className="text-[10px] font-black text-white uppercase tracking-widest">
           Trazabilidad_Forense
         </span>
       </div>

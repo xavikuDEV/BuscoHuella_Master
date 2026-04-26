@@ -167,7 +167,7 @@ export default function AdminSidebarNav() {
 
       {/* 🛰️ MONITOR INFERIOR */}
       <div className="p-6 mt-auto">
-        <div className="bg-slate-900/40 border border-slate-800/60 rounded-[2rem] p-5 space-y-4 backdrop-blur-md">
+        <div className="bg-slate-900/40 border border-slate-800/60 rounded-4xl p-5 space-y-4 backdrop-blur-md">
           <div className="flex items-center justify-between">
             <div className="flex flex-col gap-0.5">
               <span className="text-[7px] font-black text-slate-600 uppercase tracking-widest">

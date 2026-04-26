@@ -1,6 +1,6 @@
 # 🐾 Estructura del Búnker: BuscoHuella 2026
-> **Última actualización:** 02/04/2026 23:55:02
-> **Métricas:** **212** archivos · **112** TypeScript · **1** CSS · **1** SQL · **2** YAML
+> **Última actualización:** 26/04/2026 15:21:13
+> **Métricas:** **221** archivos · **117** TypeScript · **1** CSS · **2** SQL · **2** YAML
 
 ---
 
@@ -65,9 +65,7 @@
 │       │   │   ├── 📁 [locale]
 │       │   │   ├── 📁 auth
 │       │   │   ├── 📄 favicon.ico
-│       │   │   ├── 📄 globals.css
-│       │   │   ├── 📄 layout.tsx
-│       │   │   └── 📄 page.tsx
+│       │   │   └── 📄 globals.css
 │       │   ├── 📁 components
 │       │   │   ├── 📁 dashboard
 │       │   │   │   ├── 📁 home
@@ -148,6 +146,7 @@
 ├── 📁 docs
 │   ├── 📁 adr
 │   ├── 📁 db
+│   │   └── 📄 schema.sql
 │   ├── 📁 legal
 │   ├── 📄 convention.md
 │   ├── 📄 notion_schema.md
@@ -175,6 +174,8 @@
 │   │   │   │   ├── 📄 user.ts
 │   │   │   │   └── 📄 UserRoles.ts
 │   │   │   ├── 📁 repositories
+│   │   │   │   ├── 📄 IncidentRepository.test.ts
+│   │   │   │   ├── 📄 IncidentRepository.ts
 │   │   │   │   ├── 📄 PetRepository.test.ts
 │   │   │   │   ├── 📄 PetRepository.ts
 │   │   │   │   ├── 📄 UserRepository.test.ts
@@ -182,7 +183,8 @@
 │   │   │   ├── 📁 services
 │   │   │   │   ├── 📄 DuaService.test.ts
 │   │   │   │   └── 📄 DuaService.ts
-│   │   │   └── 📄 index.ts
+│   │   │   ├── 📄 index.ts
+│   │   │   └── 📄 supabase.ts
 │   │   ├── 📄 constants.ts
 │   │   ├── 📄 package.json
 │   │   └── 📄 tsconfig.json

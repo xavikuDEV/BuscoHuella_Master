@@ -1,20 +1,27 @@
-import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import "@/app/globals.css";
 
-export const metadata: Metadata = {
-  title: "BuscoHuella | DUA",
-  description: "Sistema Operativo de Bienestar Animal",
-};
+const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
 
-export default async function LocaleLayout(props: {
+export default function RootLayout({
+  children,
+}: {
   children: React.ReactNode;
-  params: Promise<{ locale: string }>;
 }) {
-  // En Next.js 16, params es una Promise
-  const { locale } = await props.params;
-
   return (
-    <main data-locale={locale} className="min-h-screen">
-      {props.children}
-    </main>
+    // Next.js 16 exige html y body aquí.
+    // Usamos lang="es" por defecto, el LocaleLayout lo gestionará internamente.
+    <html lang="es" suppressHydrationWarning>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-950`}
+        suppressHydrationWarning
+      >
+        {children}
+      </body>
+    </html>
   );
 }

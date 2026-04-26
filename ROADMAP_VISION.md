@@ -1,9 +1,9 @@
 # 🛡️ BuscoHuella — Roadmap Vision 2026 (v5.6)
 
 > **"La identidad es protección. La información es seguridad."**
-> **Estado:** Fase 2 - Data Modeling (DUA Implementation)
+> **Estado:** Fase 2 - Centro de Comando Geo-Táctico (Operacional)
 > **Nodo Maestro:** Sabadell Alpha | **Protocolo:** DUA v2.1
-> **Sincronización:** 24 de Marzo, 2026
+> **Sincronización:** 02 de Abril, 2026
 
 ---
 
@@ -72,6 +72,8 @@ Monitorización del despliegue del protocolo DUA en el Nodo Sabadell.
 - [x] **DUA Hash Engine:** Generación de identificadores únicos inmutables.
 - [x] **Audit Logs:** Trazabilidad de operaciones por Archon/Operador.
 - [x] **Centro de Inteligencia de Incidencias v1.0:** Archivo Central con filtrado en servidor, búsqueda universal reactiva (Mensaje, Sector, REF_ID) con columna virtual `id_search` + `pg_trgm`, filtrado por rango de fechas, acciones masivas (resolución/purga en bloque), exportación CSV y menú social. (`e5bf9d3`)
+- [x] **🗺️ Centro de Comando Geo-Táctico v1.0:** Filtro de jerarquía dinámica (País › Comunidad › Provincia › Municipio) con lazy loading desde Supabase, capa de cuadrícula táctica cyan en Mapbox, click-to-alert con GPS pre-rellenado, trigger SQL `auto_tag_incident_sector` y datos geográficos de Cataluña importados. (02/04/2026)
+  - **Próximos pasos:** Radar de Rango Dinámico (onCityChange por nivel + zoom reactivo), Cerebro de Estadísticas Admin, Barcelona SQL Fix, UI/UX fixes (Z-Index popup + Timeline Forense reactivo).
 
 ---
 

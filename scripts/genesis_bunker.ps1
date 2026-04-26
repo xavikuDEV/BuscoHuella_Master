@@ -1,15 +1,19 @@
-# 🐾 PROTOCOLO GÉNESIS: BUSCOHUELLA BUNKER 2.0
-# Objetivo: Inicializar infraestructura modular de grado institucional.
+# 🐾 PROTOCOLO GÉNESIS: BUSCOHUELLA BUNKER 2.1 (Multi-Tenant Edition)
+# Objetivo: Gestión total de infraestructura, guardado de progreso y gobernanza.
 
-Write-Host "🚀 Iniciando Protocolo Génesis para BuscoHuella..." -ForegroundColor Cyan
+$ErrorActionPreference = "Stop"
+Write-Host "🚀 [BUSCOHUELLA] Iniciando Protocolo Génesis V2.1..." -ForegroundColor Cyan
 
-# 1. Creación de Estructura de Carpetas (Piezas del Puzzle)
+# --- 1. VERIFICACIÓN DE IDENTIDAD Y ENTORNO ---
+Write-Host "🔍 Verificando integridad del entorno..." -ForegroundColor Yellow
+
 $folders = @(
     "apps/web-pro",
     "apps/mobile-app",
     "packages/shared-core",
     "packages/shared-ui",
     "packages/shared-config",
+    "packages/mcp-geo-server",
     "docs/adr",
     "docs/db",
     "docs/legal",
@@ -21,66 +25,74 @@ $folders = @(
 foreach ($folder in $folders) {
     if (!(Test-Path $folder)) {
         New-Item -ItemType Directory -Path $folder -Force | Out-Null
-        Write-Host "  [OK] Carpeta creada: $folder" -ForegroundColor Green
+        Write-Host "  [+] Estructura creada: $folder" -ForegroundColor Green
     }
 }
 
-# 2. Generación de ARCHITECT_CONTEXT.md (Hoja de Ruta)
+# --- 2. PROTOCOLO DE SELLADO (GIT SAVEPOINT) ---
+Write-Host "🛡️ Ejecutando Protocolo de Sellado de Cimientos..." -ForegroundColor Cyan
+$gitStatus = git status --porcelain
+if ($gitStatus) {
+    Write-Host "📦 Cambios detectados. Sellando versión actual..." -ForegroundColor Yellow
+    git add .
+    git commit -m "Genesis Savepoint: Estructura Multi-tenant, Shared Core conectado y Dashboard Base Operativo"
+    Write-Host "✅ Cimientos sellados en Git." -ForegroundColor Green
+}
+else {
+    Write-Host "✨ El búnker ya está sincronizado." -ForegroundColor Gray
+}
+
+# --- 3. ACTUALIZACIÓN DE INTELIGENCIA (ARCHITECT_CONTEXT.md) ---
 $architectContext = @"
 # 🏗️ ARCHITECT CONTEXT: BuscoHuella Ecosystem
 > Última actualización: $(Get-Date -Format "dd/MM/yyyy HH:mm:ss")
 
-## 📍 Estado Actual
-- **Fase:** Fase 1 (Cimientos y Gobernanza) — **EN CURSO** ⏳
-- **Infraestructura:** Monorepo (Next.js 15 + Expo)
-- **Hito Actual:** Configuración de la "Fuente de Verdad" (Bunker Genesis).
+## 📍 Estado Actual: FASE 3 (Conectividad y Auth) 🛰️
+- **Infraestructura:** Monorepo pnpm (Next.js 16 + Expo).
+- **Core:** Shared-core con Supabase Client universal.
+- **DB:** Esquema sellado (animals, incidences, profiles) con RLS.
+- **Dashboard:** Command Center Pro funcional con telemetría real.
 
-## 🎯 Roadmap Estratégico
-- **FASE 1: Cimientos y Gobernanza** (Setup, Supabase, Notion Sync).
-- **FASE 2: El Cerebro Animal (DUA)** (DB Inmutable, RBAC).
-- **FASE 3: Design System Accesible** (WCAG 2.2 AA).
-- **FASE 4: BuscoHuella PRO (Web)** (Intranet Autoridades).
-- **FASE 5: App Móvil MVP** (Alertas y Comunidad).
+## 🎯 Estrategia Multi-Inquilino (Sabadell / Terrassa / ...)
+- **Aislamiento:** Filtrado por `municipality_id` vía RLS.
+- **RBAC:** Roles dinámicos (police, vet, pro, citizen, admin).
+- **Web-App:** buscohuella.app para acceso público rápido (Found & Scan).
 
-## 📉 Backlog de Deuda Técnica
-- Configurar Sentry para logs automáticos.
-- Definir Smart Contracts para DUA (Blockchain).
+## 📉 Backlog Inmediato
+- [ ] Implementar Middleware de redirección por Rol.
+- [ ] Pantalla de Login / Registro con validación de perfil.
+- [ ] Mapeo de Geo-Zonas para nuevos ayuntamientos.
 "@
 $architectContext | Out-File -FilePath "ARCHITECT_CONTEXT.md" -Encoding utf8
 
-# 3. Generación de agents.md (Identidades de IA)
-$agentsDoc = @"
-# 🤖 EQUIPO DE AGENTES: BUSCOHUELLA
-1. **Orquestador (CTO):** Supervisor de procesos y sincronización.
-2. **Obrero (Aider/Groq):** Brazo ejecutor de código modular.
-3. **QA & Accessibility Specialist:** Validador WCAG 2.2 AA y Tests.
-4. **Technical Writer:** Documentador de la carpeta /docs.
-"@
-$agentsDoc | Out-File -FilePath "agents.md" -Encoding utf8
-
-# 4. Generación de menu.ps1 (Sistema Operativo Local)
+# --- 4. ACTUALIZACIÓN DEL SISTEMA OPERATIVO LOCAL (menu.ps1) ---
 $menuScript = @"
 do {
     Clear-Host
     Write-Host "===============================================" -ForegroundColor Yellow
-    Write-Host "   🐾 BUSCOHUELLA MASTER - SISTEMA OPERATIVO   " -ForegroundColor Yellow
+    Write-Host "   🐾 BUSCOHUELLA MASTER OS - 2026 🛰️          " -ForegroundColor Yellow
+    Write-Host "   Arquitectura Multi-Rol & Multi-Ciudad       " -ForegroundColor Yellow
     Write-Host "===============================================" -ForegroundColor Yellow
-    Write-Host "1. [DOCS]   Actualizar Contexto"
-    Write-Host "2. [SYNC]   Sincronizar (GitHub, Notion, Drive)"
-    Write-Host "3. [HEALTH] Check de Accesibilidad (WCAG)"
-    Write-Host "0. [EXIT]   Salir"
+    Write-Host "1. [DEV]   Lanzar Web Pro (Dashboard Admin)"
+    Write-Host "2. [DEV]   Lanzar Mobile App (Expo)"
+    Write-Host "3. [CORE]  Recompilar Shared-Core (Build)"
+    Write-Host "4. [SYNC]  Sincronizar Búnker (Genesis Savepoint)"
+    Write-Host "5. [DB]    Abrir Panel Supabase"
+    Write-Host "0. [EXIT]  Cerrar Consola"
     Write-Host "-----------------------------------------------"
-    `$choice = Read-Host "Selecciona una acción"
+    `$choice = Read-Host "Selecciona operación de búnker"
 
     switch (`$choice) {
-        "1" { Write-Host "Actualizando contexto..." -ForegroundColor Cyan }
-        "2" { Write-Host "Sincronizando búnker..." -ForegroundColor Green }
-        "3" { Write-Host "Ejecutando auditoría WCAG..." -ForegroundColor Magenta }
+        "1" { pnpm --filter @buscohuella/web dev }
+        "2" { pnpm --filter @buscohuella/mobile start }
+        "3" { pnpm --filter @buscohuella/shared build }
+        "4" { .\scripts\genesis_bunker.ps1 }
+        "5" { Start-Process "https://supabase.com/dashboard" }
     }
-    if (`$choice -ne "0") { Read-Host "Presiona Enter para continuar..." }
+    if (`$choice -ne "0") { Read-Host "Presiona Enter para volver al búnker..." }
 } while (`$choice -ne "0")
 "@
 $menuScript | Out-File -FilePath "menu.ps1" -Encoding utf8
 
-Write-Host "✅ Protocolo Génesis completado. El búnker BuscoHuella está listo para operar." -ForegroundColor Green
-Write-Host "👉 Siguiente paso: Ejecuta '.\menu.ps1' para iniciar el mando." -ForegroundColor Yellow
+Write-Host "✅ Búnker BuscoHuella Actualizado y Operativo." -ForegroundColor Green
+Write-Host "👉 Ejecuta '.\menu.ps1' para tomar el mando." -ForegroundColor Yellow
