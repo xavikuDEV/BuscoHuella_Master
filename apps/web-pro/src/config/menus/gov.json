@@ -1,0 +1,32 @@
+[
+  {
+    "label": "Mapa Global",
+    "icon": "Globe",
+    "href": "/es/dashboard/gov/global-map",
+    "requiredRole": ["admin"],
+    "tier": "free",
+    "deniedMessage": "Acceso exclusivo para el Alto Mando.",
+    "upgradeMessage": "",
+    "children": []
+  },
+  {
+    "label": "Mapa Regional",
+    "icon": "MapPin",
+    "href": "/es/dashboard/gov/regional-map",
+    "requiredRole": ["admin"],
+    "tier": "free",
+    "deniedMessage": "Acceso exclusivo para el Mando Regional.",
+    "upgradeMessage": "",
+    "children": []
+  },
+  {
+    "label": "Command Center",
+    "icon": "Shield",
+    "href": "/es/dashboard/gov/[municipality]/police",
+    "requiredRole": ["admin", "police"],
+    "tier": "free",
+    "deniedMessage": "Acceso exclusivo para Autoridades y Seguridad.",
+    "upgradeMessage": "",
+    "children": []
+  }
+]

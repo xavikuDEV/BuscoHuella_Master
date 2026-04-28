@@ -1,6 +1,6 @@
 # 🐾 Estructura del Búnker: BuscoHuella 2026
-> **Última actualización:** 28/04/2026 12:59:53
-> **Métricas:** **225** archivos · **120** TypeScript · **1** CSS · **2** SQL · **2** YAML
+> **Última actualización:** 28/04/2026 23:16:48
+> **Métricas:** **236** archivos · **124** TypeScript · **1** CSS · **4** SQL · **2** YAML
 
 ---
 
@@ -84,6 +84,7 @@
 │       │   │   │   │   ├── 📄 MapInner.tsx
 │       │   │   │   │   ├── 📄 MapSelectorInner.tsx
 │       │   │   │   │   ├── 📄 NewIncidentModal.tsx
+│       │   │   │   │   ├── 📄 PatrolDashboard.tsx
 │       │   │   │   │   ├── 📄 RealtimeRefresher.tsx
 │       │   │   │   │   ├── 📄 ResourceMonitor.tsx
 │       │   │   │   │   ├── 📄 SectorCanvas.tsx
@@ -104,7 +105,8 @@
 │       │   │   │   │       └── 📄 IncidentTimeline.tsx
 │       │   │   │   ├── 📁 layouts
 │       │   │   │   │   ├── 📄 AdminLayout.tsx
-│       │   │   │   │   └── 📄 AdminSidebarNav.tsx
+│       │   │   │   │   ├── 📄 AdminSidebarNav.tsx
+│       │   │   │   │   └── 📄 WalletStatus.tsx
 │       │   │   │   ├── 📁 logs
 │       │   │   │   │   ├── 📄 LogExportButtons.tsx
 │       │   │   │   │   └── 📄 LogRow.tsx
@@ -120,13 +122,21 @@
 │       │   │   ├── 📁 forms
 │       │   │   │   └── 📄 PetRegistrationForm.tsx
 │       │   │   └── 📁 layouts
+│       │   ├── 📁 config
+│       │   │   └── 📁 menus
+│       │   │       ├── 📄 admin.json
+│       │   │       ├── 📄 citizen.json
+│       │   │       ├── 📄 gov.json
+│       │   │       ├── 📄 pro.json
+│       │   │       └── 📄 shelter.json
 │       │   ├── 📁 lib
 │       │   │   ├── 📁 actions
 │       │   │   │   ├── 📄 auth.actions.ts
 │       │   │   │   ├── 📄 incidents.actions.ts
 │       │   │   │   ├── 📄 logs.actions.ts
 │       │   │   │   ├── 📄 pets.actions.ts
-│       │   │   │   └── 📄 users.actions.ts
+│       │   │   │   ├── 📄 users.actions.ts
+│       │   │   │   └── 📄 wallet.actions.ts
 │       │   │   ├── 📁 supabase
 │       │   │   │   ├── 📄 client.ts
 │       │   │   │   └── 📄 server.ts
@@ -207,7 +217,9 @@
 │   └── 📄 update-structure.ps1
 ├── 📁 supabase
 │   └── 📁 migrations
-│       └── 📄 0001_create_pets_table.sql
+│       ├── 📄 0001_create_pets_table.sql
+│       ├── 📄 0002_add_balance_hue.sql
+│       └── 📄 0003_add_sector_and_hue_transactions.sql
 ├── 📁 test-results
 │   └── 📄 .last-run.json
 ├── 📁 tests

@@ -1,0 +1,32 @@
+[
+  {
+    "label": "Gestión de Plazas",
+    "icon": "Layout",
+    "href": "/es/dashboard/shelter/spaces",
+    "requiredRole": ["admin", "shelter"],
+    "tier": "free",
+    "deniedMessage": "Acceso exclusivo para personal de refugios.",
+    "upgradeMessage": "",
+    "children": []
+  },
+  {
+    "label": "Adopciones",
+    "icon": "Heart",
+    "href": "/es/dashboard/shelter/adoptions",
+    "requiredRole": ["admin", "shelter"],
+    "tier": "free",
+    "deniedMessage": "Acceso exclusivo para personal de refugios.",
+    "upgradeMessage": "",
+    "children": []
+  },
+  {
+    "label": "Voluntariado",
+    "icon": "Users",
+    "href": "/es/dashboard/shelter/volunteers",
+    "requiredRole": ["admin", "shelter"],
+    "tier": "free",
+    "deniedMessage": "Acceso exclusivo para personal de refugios.",
+    "upgradeMessage": "",
+    "children": []
+  }
+]

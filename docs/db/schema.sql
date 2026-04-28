@@ -22,8 +22,11 @@ CREATE TABLE IF NOT EXISTS public.profiles (
     phone TEXT,
     location_city TEXT,
     verification_status TEXT DEFAULT 'unverified',
+    balance_hue NUMERIC DEFAULT 0,
+    assigned_sector_id UUID REFERENCES public.sectors(id),
     created_at TIMESTAMPTZ DEFAULT now(),
     updated_at TIMESTAMPTZ DEFAULT now()
+
 );
 
 -- Sectores (Aseguramos que exista)
@@ -66,6 +69,17 @@ CREATE TABLE IF NOT EXISTS public.incidences (
     created_at TIMESTAMPTZ DEFAULT now()
 );
 
+-- Transacciones HUE
+CREATE TABLE IF NOT EXISTS public.hue_transactions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES public.profiles(id) NOT NULL,
+    amount NUMERIC NOT NULL,
+    reason TEXT NOT NULL,
+    validator_id UUID REFERENCES public.profiles(id),
+    created_at TIMESTAMPTZ DEFAULT now()
+);
+
+
 -- ==========================================
 -- 2. SEGURIDAD RLS (BLINDAJE)
 -- ==========================================
@@ -73,6 +87,8 @@ ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.animals ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.incidences ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.sectors ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.hue_transactions ENABLE ROW LEVEL SECURITY;
+
 
 -- Limpieza de políticas existentes para evitar el error 42710
 DO $$ 

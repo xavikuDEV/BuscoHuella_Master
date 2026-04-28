@@ -28,12 +28,24 @@ export class IncidentRepository {
   /**
    * 📡 Incidencias activas (filtradas por municipio)
    */
-  async fetchActive(municipality_slug: string) {
-    if (!municipality_slug) {
-      throw new Error("Municipality slug requerido");
+  async fetchActive(municipality_slug?: string) {
+    let assigned_sector_id = null;
+
+    try {
+      const { data: { user } } = await this.client.auth.getUser();
+      if (user) {
+        const { data: profile } = await this.client
+          .from("profiles")
+          .select("assigned_sector_id")
+          .eq("id", user.id)
+          .single();
+        assigned_sector_id = profile?.assigned_sector_id;
+      }
+    } catch (error) {
+      console.error("Error fetching user assigned_sector_id:", error);
     }
 
-    return await this.client
+    let query = this.client
       .from("incidences")
       .select(
         `
@@ -41,10 +53,19 @@ export class IncidentRepository {
         reporter:profiles(full_name)
       `,
       )
-      .eq("status", "open")
-      .eq("municipality_slug", municipality_slug) // 🔐 MULTI-TENANT
-      .order("created_at", { ascending: false });
+      .eq("status", "open");
+
+    if (municipality_slug) {
+      query = query.eq("municipality_slug", municipality_slug);
+    }
+
+    if (assigned_sector_id) {
+      query = query.eq("sector_id", assigned_sector_id);
+    }
+
+    return await query.order("created_at", { ascending: false });
   }
+
 
   /**
    * 🛡️ Actualizar estado (solo dentro del mismo municipio)

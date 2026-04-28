@@ -107,6 +107,7 @@ export async function createUserAction(userData: {
   display_name: string;
   role: UserRole;
   location_city?: string;
+  assigned_sector_id?: string | null;
 }) {
   const supabase = await createServerClient();
 
@@ -214,8 +215,10 @@ export async function updateUserAction(
     email: string;
     role: UserRole;
     location_city?: string;
+    assigned_sector_id?: string | null;
   }
 ) {
+
   const supabase = await createServerClient();
 
   try {

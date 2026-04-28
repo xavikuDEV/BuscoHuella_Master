@@ -1,0 +1,32 @@
+[
+  {
+    "label": "Clínica/Tienda",
+    "icon": "Store",
+    "href": "/es/dashboard/pro/business",
+    "requiredRole": ["admin", "vet"],
+    "tier": "free",
+    "deniedMessage": "Acceso exclusivo para profesionales registrados.",
+    "upgradeMessage": "",
+    "children": []
+  },
+  {
+    "label": "Citas",
+    "icon": "Calendar",
+    "href": "/es/dashboard/pro/appointments",
+    "requiredRole": ["admin", "vet"],
+    "tier": "free",
+    "deniedMessage": "Acceso exclusivo para profesionales registrados.",
+    "upgradeMessage": "",
+    "children": []
+  },
+  {
+    "label": "Censo Pro",
+    "icon": "FileText",
+    "href": "/es/dashboard/pro/census",
+    "requiredRole": ["admin", "vet"],
+    "tier": "free",
+    "deniedMessage": "Acceso exclusivo para profesionales registrados.",
+    "upgradeMessage": "",
+    "children": []
+  }
+]

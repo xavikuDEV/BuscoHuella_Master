@@ -1,0 +1,63 @@
+[
+  {
+    "label": "Censo de Mascotas",
+    "icon": "Dog",
+    "href": "/es/dashboard/admin/pets",
+    "requiredRole": ["admin", "administrador"],
+    "tier": "free",
+    "deniedMessage": "Acceso restringido para el Administrador.",
+    "upgradeMessage": "",
+    "children": []
+  },
+  {
+    "label": "Censo Humano",
+    "icon": "Users",
+    "href": "/es/dashboard/admin/users",
+    "requiredRole": ["admin", "administrador"],
+    "tier": "free",
+    "deniedMessage": "Acceso restringido para el Administrador.",
+    "upgradeMessage": "",
+    "children": []
+  },
+  {
+    "label": "Infraestructura",
+    "icon": "Terminal",
+    "href": "/es/dashboard/admin/logs",
+    "requiredRole": ["admin", "administrador"],
+    "tier": "free",
+    "deniedMessage": "Acceso restringido para el Administrador.",
+    "upgradeMessage": "",
+    "children": []
+  },
+  {
+    "label": "Configuración Global",
+    "icon": "Settings",
+    "href": "/es/dashboard/admin/settings",
+    "requiredRole": ["admin", "administrador"],
+    "tier": "free",
+    "deniedMessage": "Acceso restringido para el Administrador.",
+    "upgradeMessage": "",
+    "children": []
+  },
+  {
+    "label": "Historial de Incidencias",
+    "icon": "ShieldAlert",
+    "href": "/es/dashboard/admin/incidents",
+    "requiredRole": ["admin"],
+    "tier": "free",
+    "deniedMessage": "Acceso restringido para el Administrador.",
+    "upgradeMessage": "",
+    "children": []
+  },
+  {
+    "label": "Zonas y Sectores",
+    "icon": "MapPin",
+    "href": "/es/dashboard/admin/municipality/zones",
+    "requiredRole": ["admin"],
+    "tier": "free",
+    "deniedMessage": "Acceso restringido para el Administrador.",
+    "upgradeMessage": "",
+    "children": []
+  }
+
+]

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { UserProfile, UserRole } from "@buscohuella/shared";
 import {
   updateUserRoleAction,
@@ -8,6 +8,7 @@ import {
   createUserAction,
   updateUserAction,
 } from "@/lib/actions/users.actions";
+import { createClient } from "@/lib/supabase/client";
 
 export default function ManageUsersClient({
   users = [],
@@ -31,7 +32,56 @@ export default function ManageUsersClient({
     display_name: "",
     role: UserRole.USER,
     location_city: "",
+    assigned_sector_id: "",
   });
+
+  const [availableSectors, setAvailableSectors] = useState<
+    { id: string; name: string }[]
+  >([]);
+  const [allSectorsMap, setAllSectorsMap] = useState<Record<string, string>>(
+    {},
+  );
+
+  useEffect(() => {
+    async function fetchAllSectors() {
+      const supabase = createClient();
+      const { data } = await supabase.from("sectors").select("id, name");
+      if (data) {
+        const mapping: Record<string, string> = {};
+        data.forEach((sec) => {
+          mapping[sec.id] = sec.name;
+        });
+        setAllSectorsMap(mapping);
+      }
+    }
+    fetchAllSectors();
+  }, []);
+
+  useEffect(() => {
+    async function loadSectors() {
+      const adminUser = users.find((u) => u.id === currentUserId);
+      const adminCity = adminUser?.location_city;
+      const targetCity = adminCity || formData.location_city;
+
+      if (
+        !targetCity ||
+        (formData.role !== "police" && formData.role !== "vet")
+      ) {
+        setAvailableSectors([]);
+        return;
+      }
+
+      const supabase = createClient();
+      const { data: sectData } = await supabase
+        .from("sectors")
+        .select("id, name")
+        .ilike("name", `%${targetCity}%`)
+        .order("name", { ascending: true });
+
+      setAvailableSectors(sectData || []);
+    }
+    loadSectors();
+  }, [formData.location_city, formData.role, currentUserId, users]);
 
   // 🛰️ LÓGICA DE FILTRADO DINÁMICO
   const filteredUsers = useMemo(() => {
@@ -58,6 +108,7 @@ export default function ManageUsersClient({
       display_name: "",
       role: UserRole.USER,
       location_city: "",
+      assigned_sector_id: "",
     });
     setIsModalOpen(true);
   };
@@ -69,6 +120,7 @@ export default function ManageUsersClient({
       display_name: user.display_name || "",
       role: (user.role as UserRole) || UserRole.USER,
       location_city: user.location_city || "",
+      assigned_sector_id: (user as any).assigned_sector_id || "",
     });
     setIsModalOpen(true);
   };
@@ -94,6 +146,7 @@ export default function ManageUsersClient({
           display_name: "",
           role: UserRole.USER,
           location_city: "",
+          assigned_sector_id: "",
         });
       } else {
         alert(`Error en el protocolo: ${result.error}`);
@@ -213,6 +266,12 @@ export default function ManageUsersClient({
                   <div className="text-[9px] text-indigo-400 uppercase font-black tracking-widest mt-1">
                     {roleLabels[user.role] || user.role}
                   </div>
+                  {(user as any).assigned_sector_id &&
+                    allSectorsMap[(user as any).assigned_sector_id] && (
+                      <span className="inline-flex items-center gap-1 text-[8px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded-full mt-1 font-semibold uppercase">
+                        📍 {allSectorsMap[(user as any).assigned_sector_id]}
+                      </span>
+                    )}
                 </td>
                 <td className="p-8 text-right space-x-2">
                   <button
@@ -326,6 +385,31 @@ export default function ManageUsersClient({
                   />
                 </div>
               </div>
+
+              {(formData.role === "police" || formData.role === "vet") && (
+                <div className="space-y-1">
+                  <label className="text-[9px] font-black text-slate-500 uppercase ml-4">
+                    Sector Asignado
+                  </label>
+                  <select
+                    className="w-full bg-slate-950 border border-slate-800 rounded-2xl px-5 py-4 text-xs text-indigo-400 outline-none"
+                    value={formData.assigned_sector_id}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        assigned_sector_id: e.target.value,
+                      })
+                    }
+                  >
+                    <option value="">Sin sector asignado</option>
+                    {availableSectors.map((sec) => (
+                      <option key={sec.id} value={sec.id}>
+                        {sec.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
 
               <button
                 type="submit"

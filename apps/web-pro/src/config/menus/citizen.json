@@ -1,0 +1,42 @@
+[
+  {
+    "label": "Mis Mascotas",
+    "icon": "Dog",
+    "href": "/es/dashboard/citizen/pets",
+    "requiredRole": ["admin", "citizen_free", "citizen_premium"],
+    "tier": "free",
+    "deniedMessage": "Acceso exclusivo para ciudadanos registrados.",
+    "upgradeMessage": "Mejora a Premium para funciones avanzadas de salud.",
+    "children": []
+  },
+  {
+    "label": "DUA Digital",
+    "icon": "Fingerprint",
+    "href": "/es/dashboard/citizen/dua",
+    "requiredRole": ["admin", "citizen_free", "citizen_premium"],
+    "tier": "premium",
+    "deniedMessage": "Requiere verificación ciudadana.",
+    "upgradeMessage": "El DUA Digital requiere verificación biométrica y suscripción Premium.",
+    "children": []
+  },
+  {
+    "label": "Mapa PetFriendly",
+    "icon": "Map",
+    "href": "/es/dashboard/citizen/map",
+    "requiredRole": ["admin", "citizen_free", "citizen_premium"],
+    "tier": "free",
+    "deniedMessage": "Solo ciudadanos autorizados.",
+    "upgradeMessage": "Desbloquea capas avanzadas en el mapa con Premium.",
+    "children": []
+  },
+  {
+    "label": "Marketplace HUE",
+    "icon": "ShoppingBag",
+    "href": "/es/dashboard/citizen/marketplace",
+    "requiredRole": ["admin", "citizen_free", "citizen_premium"],
+    "tier": "free",
+    "deniedMessage": "Acceso denegado al ecosistema.",
+    "upgradeMessage": "Desbloquea ofertas exclusivas con Premium.",
+    "children": []
+  }
+]
