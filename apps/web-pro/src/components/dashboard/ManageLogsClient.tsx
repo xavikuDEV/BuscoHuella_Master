@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from "react";
 import LogExportButtons from "./logs/LogExportButtons";
 import LogRow from "./logs/LogRow";
-import { clearAllLogsAction } from "@/app/[locale]/dashboard/admin/logs/actions";
+import { purgeLogsAction } from "@/lib/actions/logs.actions";
 import { usePathname } from "next/navigation";
 
 export default function ManageLogsClient({ logs = [] }: { logs: any[] }) {
@@ -54,7 +54,7 @@ export default function ManageLogsClient({ logs = [] }: { logs: any[] }) {
           <button
             onClick={() =>
               confirm("¿Ejecutar purga completa del sistema?") &&
-              clearAllLogsAction()
+              purgeLogsAction()
             }
             className="px-6 py-3 bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white text-[10px] font-black uppercase rounded-2xl border border-rose-500/20 transition-all shadow-lg shadow-rose-500/10"
           >

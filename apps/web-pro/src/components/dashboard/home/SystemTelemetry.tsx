@@ -2,7 +2,7 @@
 
 import {
   deleteLogAction,
-  clearAllLogsAction,
+  purgeLogsAction,
 } from "@/lib/actions/logs.actions";
 
 export default function SystemTelemetry({ logs }: { logs: any[] }) {
@@ -13,7 +13,7 @@ export default function SystemTelemetry({ logs }: { logs: any[] }) {
           Telemetría
         </h3>
         <button
-          onClick={() => confirm("¿Purgar feed?") && clearAllLogsAction()}
+          onClick={() => confirm("¿Purgar feed?") && purgeLogsAction()}
           className="text-[8px] font-black text-rose-500/50 hover:text-rose-500 uppercase tracking-widest transition-all"
         >
           Limpiar Todo

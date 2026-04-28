@@ -2,26 +2,55 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import {
   LayoutDashboard,
   ShieldAlert,
   PawPrint,
   Users,
+  UserPlus,
   Map as MapIcon,
   Terminal,
   LogOut,
-  Activity,
   Radio,
   Cpu,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { logout } from "@/lib/actions/auth.actions";
+import { createClient } from "@/lib/supabase/client";
 
 export default function AdminSidebarNav() {
   const pathname = usePathname();
   const locale = pathname.split("/")[1] || "es";
 
-  // --- 🛰️ LÓGICA DE NODO OPERATIVO DINÁMICO ---
+  const supabase = createClient();
+
+  // 🧠 Estado de rol
+  const [role, setRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    const getRole = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) return;
+
+      const { data } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .single();
+
+      setRole(data?.role || null);
+    };
+
+    getRole();
+  }, []);
+
+  const isAdmin = role === "admin";
+
+  // --- 🛰️ NODO OPERATIVO ---
   const isIncidentDetail =
     pathname.includes("/incidents/") && pathname.split("/").length > 5;
   const isTerritorial = pathname.includes("/municipality/zones");
@@ -51,18 +80,16 @@ export default function AdminSidebarNav() {
     nodeLabel = "Live_Telemetry";
   }
 
-  // --- 🔐 PROTOCOLO DE CIERRE DE SESIÓN ---
+  // 🔐 Logout
   const handleLogout = async () => {
     try {
-      // Ejecutamos la Server Action para limpiar cookies y sesión en el servidor
       await logout();
-      // El redirect ya lo hace la Server Action, pero por seguridad
-      // y para limpiar el estado del cliente, Next.js se encarga del resto.
     } catch (error) {
       console.error("Error en el protocolo de salida:", error);
     }
   };
 
+  // 📂 NAV GROUPS (dinámico por rol)
   const groups = [
     {
       title: "Operaciones",
@@ -109,26 +136,42 @@ export default function AdminSidebarNav() {
         },
       ],
     },
+
+    // 🆕 SOLO ADMIN
+    ...(isAdmin
+      ? [
+          {
+            title: "Administración",
+            items: [
+              {
+                name: "Reclutamiento",
+                href: `/${locale}/dashboard/admin/users/new`,
+                icon: UserPlus,
+              },
+            ],
+          },
+        ]
+      : []),
   ];
 
   return (
-    <div className="flex flex-col h-full bg-slate-950 border-r border-slate-900/50 select-none shadow-2xl overflow-hidden">
-      {/* 🚀 CABECERA: BRANDING TÁCTICO */}
+    <div className="flex flex-col h-full bg-slate-950 border-r border-slate-900/50 select-none shadow-2xl overflow-hidden relative">
+      {/* 🚀 HEADER */}
       <div className="p-8 mb-2">
         <div className="flex items-center gap-4">
-          <div className="relative group">
+          <div className="relative">
             <div className="absolute -inset-1 bg-cyan-500/20 rounded-lg blur-md animate-pulse" />
             <div className="relative bg-slate-900 p-2.5 rounded-xl border border-cyan-500/30">
               <Cpu size={20} className="text-cyan-400" />
             </div>
           </div>
-          <div className="flex flex-col">
-            <span className="text-sm font-black text-white tracking-tight leading-none uppercase">
+          <div>
+            <span className="text-sm font-black text-white uppercase">
               BuscoHuella
             </span>
-            <div className="flex items-center gap-1.5 mt-1">
+            <div className="flex items-center gap-1 mt-1">
               <div className="h-1 w-1 bg-cyan-500 rounded-full animate-ping" />
-              <span className="text-[7px] font-bold text-cyan-500/60 uppercase tracking-[0.3em]">
+              <span className="text-[7px] text-cyan-500/60 uppercase">
                 Bunker_OS_v3.5
               </span>
             </div>
@@ -136,43 +179,33 @@ export default function AdminSidebarNav() {
         </div>
       </div>
 
-      {/* 📂 NAVEGACIÓN PRINCIPAL */}
-      <nav
-        className="flex-1 px-5 space-y-8 overflow-y-auto"
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-      >
-        <style>{`nav::-webkit-scrollbar { display: none; }`}</style>
+      {/* 📂 NAV */}
+      <nav className="flex-1 px-5 space-y-8 overflow-y-auto">
         {groups.map((group) => (
           <div key={group.title} className="space-y-3">
-            <p className="text-[8px] font-black text-slate-700 uppercase tracking-[0.4em] ml-4">
+            <p className="text-[8px] font-black text-slate-700 uppercase ml-4">
               {group.title}
             </p>
+
             <div className="space-y-1">
               {group.items.map((item) => {
                 const isActive =
                   pathname === item.href ||
                   (item.href !== `/${locale}/dashboard/admin` &&
                     pathname.startsWith(item.href));
+
                 return (
                   <Link
                     key={item.name}
                     href={item.href}
                     className={cn(
-                      "flex items-center gap-3 px-5 py-3 rounded-2xl text-[10px] font-bold uppercase transition-all group relative",
+                      "flex items-center gap-3 px-5 py-3 rounded-2xl text-[10px] font-bold uppercase transition-all",
                       isActive
-                        ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/20"
-                        : "text-slate-500 hover:text-slate-200 hover:bg-white/5",
+                        ? "bg-cyan-500/10 text-cyan-400"
+                        : "text-slate-500 hover:text-white hover:bg-white/5",
                     )}
                   >
-                    {isActive && (
-                      <div className="absolute left-0 top-1/4 bottom-1/4 w-0.5 bg-cyan-400 rounded-full shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
-                    )}
-                    <item.icon
-                      size={16}
-                      className={cn(
-                        isActive ? "text-cyan-400" : "text-slate-600",
-                      )}
-                    />
+                    <item.icon size={16} />
                     {item.name}
                   </Link>
                 );
@@ -182,39 +215,31 @@ export default function AdminSidebarNav() {
         ))}
       </nav>
 
-      {/* 🛰️ MONITOR DE ESTADO Y CIERRE (FOOTER) */}
+      {/* 🚀 BOTÓN FLOTANTE ADMIN */}
+      {isAdmin && (
+        <Link
+          href={`/${locale}/dashboard/admin/users/new`}
+          className="absolute bottom-24 right-6 flex items-center gap-2 px-4 py-3 rounded-xl bg-cyan-500 text-black text-[10px] font-black uppercase shadow-lg hover:scale-105 transition-all"
+        >
+          <UserPlus size={14} />
+          Nuevo
+        </Link>
+      )}
+
+      {/* 🛰️ FOOTER */}
       <div className="p-6 mt-auto">
-        <div className="bg-slate-900/40 border border-slate-800/60 rounded-[2.5rem] p-5 space-y-4 backdrop-blur-md">
-          <div className="flex items-center justify-between">
-            <div className="flex flex-col gap-0.5">
-              <span className="text-[7px] font-black text-slate-600 uppercase tracking-widest">
-                {nodeLabel}
-              </span>
-              <div className="flex items-center gap-2">
-                <div
-                  className={cn(
-                    "h-1.5 w-1.5 rounded-full animate-pulse shadow-[0_0_10px_rgba(255,255,255,0.2)]",
-                    nodeStatus,
-                  )}
-                />
-                <span className="text-[10px] font-black text-white font-mono tracking-tighter">
-                  {nodeID}
-                </span>
-              </div>
-            </div>
-            <Radio
-              size={12}
-              className={cn(
-                "animate-pulse",
-                isIncidentDetail ? "text-rose-500" : "text-emerald-500",
-              )}
-            />
+        <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-5 space-y-4">
+          <div className="flex justify-between">
+            <span className="text-[10px] text-white font-mono">{nodeID}</span>
+            <Radio size={12} className="text-emerald-500 animate-pulse" />
           </div>
+
           <button
             onClick={handleLogout}
-            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-[9px] font-black uppercase text-rose-500 bg-rose-500/5 hover:bg-rose-500/10 border border-rose-500/10 transition-all active:scale-95"
+            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-[9px] font-black uppercase text-rose-500 bg-rose-500/10"
           >
-            <LogOut size={12} /> Terminar_Turno
+            <LogOut size={12} />
+            Terminar_Turno
           </button>
         </div>
       </div>

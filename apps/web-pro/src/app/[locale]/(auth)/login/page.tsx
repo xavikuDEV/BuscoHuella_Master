@@ -11,7 +11,7 @@ export default async function LoginPage({
   params,
   searchParams,
 }: LoginPageProps) {
-  // 🛰️ PROTOCOLO DE DESEMPAQUETADO (Obligatorio en Next.js 15)
+  // 🛰️ PROTOCOLO DE DESEMPAQUETADO
   const { locale } = await params;
   const { error, message } = await searchParams;
 
@@ -67,6 +67,7 @@ export default async function LoginPage({
                 name="email"
                 type="email"
                 required
+                autoComplete="email"
                 placeholder="operador@buscohuella.com"
                 className="w-full bg-slate-950 border border-slate-800 rounded-2xl px-5 py-4 text-sm text-white focus:border-indigo-500/50 outline-none transition-all placeholder:text-slate-700"
               />
@@ -81,6 +82,7 @@ export default async function LoginPage({
                 name="password"
                 type="password"
                 required
+                autoComplete="current-password"
                 placeholder="••••••••••••"
                 className="w-full bg-slate-950 border border-slate-800 rounded-2xl px-5 py-4 text-sm text-white focus:border-indigo-500/50 outline-none transition-all placeholder:text-slate-700"
               />

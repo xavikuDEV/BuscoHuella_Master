@@ -7,7 +7,7 @@ import {
   deleteUserAction,
   createUserAction,
   updateUserAction,
-} from "@/app/[locale]/dashboard/admin/users/actions";
+} from "@/lib/actions/users.actions";
 
 export default function ManageUsersClient({
   users = [],

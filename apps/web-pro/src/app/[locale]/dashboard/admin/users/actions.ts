@@ -1,101 +1,12 @@
 "use server";
 
-import { createClient } from "@supabase/supabase-js";
-import { revalidatePath } from "next/cache";
-import { createClient as createServerClient } from "@/lib/supabase/server";
-import { UserRole } from "@buscohuella/shared";
 import { randomUUID } from "node:crypto";
+import { revalidatePath } from "next/cache";
+import { createClient } from "@/lib/supabase/server";
+import { UserRole } from "@buscohuella/shared";
 
 // Protocolo de ruta para sincronización de caché
 const USERS_PATH = "/[locale]/dashboard/admin/users";
-
-/**
- * 🔐 Cliente administrativo con privilegios totales (SERVICE_ROLE).
- */
-async function createAdminClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!supabaseUrl || !serviceRoleKey) {
-    throw new Error(
-      "CRITICAL: Configuración de Supabase incompleta (URL o Service Role Key).",
-    );
-  }
-
-  return createClient(supabaseUrl, serviceRoleKey, {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
-  });
-}
-
-/**
- * 🚀 Server Action para crear usuarios desde el panel de Admin.
- */
-export async function createAdminUserAction(userData: {
-  email: string;
-  fullName: string;
-  role: string;
-  password?: string;
-  municipality_slug?: string;
-}) {
-  console.log(`📡 Admin Protocol: Iniciando creación de ${userData.email}`);
-
-  try {
-    const adminClient = await createAdminClient();
-
-    // 1️⃣ Crear usuario en Auth
-    const { data: authData, error: authError } =
-      await adminClient.auth.admin.createUser({
-        email: userData.email,
-        password: userData.password || "BuscoHuella2026!",
-        email_confirm: true,
-        user_metadata: {
-          display_name: userData.fullName,
-          full_name: userData.fullName, // 👈 Compatibilidad con triggers
-          role: userData.role,
-          municipality_slug: userData.municipality_slug || "global", // 👈 CLAVE para triggers
-        },
-      });
-
-    if (authError) {
-      console.error("❌ Error en Auth Admin:", authError.message);
-      return { success: false, error: authError.message };
-    }
-
-    const newUserId = authData.user.id;
-
-    // 2️⃣ Sincronizar perfil
-    const { error: profileError } = await adminClient.from("profiles").upsert({
-      id: newUserId,
-      display_name: userData.fullName,
-      role: userData.role,
-      municipality_slug: userData.municipality_slug || "global",
-      updated_at: new Date().toISOString(),
-    });
-
-    if (profileError) {
-      console.error("❌ Error sincronizando perfil:", profileError.message);
-      return {
-        success: false,
-        error: "Usuario creado pero falló la sincronización de perfil.",
-      };
-    }
-
-    // 🔄 Revalidar caché global (puedes afinar esto luego)
-    revalidatePath("/", "layout");
-
-    return {
-      success: true,
-      userId: newUserId,
-      message: `Protocolo completado. Usuario ${userData.role} operativo.`,
-    };
-  } catch (err) {
-    console.error("💥 Fallo crítico en la acción:", err);
-    return { success: false, error: "Error de conexión con el búnker." };
-  }
-}
 
 /**
  * 🆕 REGISTRAR PERSONA / ENTIDAD (Manual)
@@ -108,7 +19,7 @@ export async function createUserAction(userData: {
   role: UserRole;
   location_city?: string;
 }) {
-  const supabase = await createServerClient();
+  const supabase = await createClient();
 
   try {
     const { data, error } = await supabase
@@ -146,7 +57,7 @@ export async function updateUserRoleAction(
   userId: string,
   newRole: UserRole | string,
 ) {
-  const supabase = await createServerClient();
+  const supabase = await createClient();
 
   try {
     const { data, error } = await supabase
@@ -176,7 +87,7 @@ export async function updateUserRoleAction(
  * Incluye protección para evitar que el Administrador actual se elimine a sí mismo.
  */
 export async function deleteUserAction(userId: string) {
-  const supabase = await createServerClient();
+  const supabase = await createClient();
 
   try {
     const {
@@ -216,7 +127,7 @@ export async function updateUserAction(
     location_city?: string;
   }
 ) {
-  const supabase = await createServerClient();
+  const supabase = await createClient();
 
   try {
     const { data, error } = await supabase

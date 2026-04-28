@@ -19,12 +19,14 @@ interface NewIncidentModalProps {
   onClose: () => void;
   /** Coords pre-cargadas desde click en el mapa */
   initialCoords?: { lat: number; lng: number } | null;
+  currentSector?: string;
 }
 
 export default function NewIncidentModal({
   isOpen,
   onClose,
   initialCoords,
+  currentSector,
 }: NewIncidentModalProps) {
   const [loading, setLoading] = useState(false);
   const [location, setLocation] = useState(

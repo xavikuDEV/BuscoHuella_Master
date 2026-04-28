@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import GeoHierarchyFilter from "./geo-filter";
-import SectorMapClient from "@/app/[locale]/dashboard/municipality/zones/SectorMapClient";
-import SectorsList from "@/app/[locale]/dashboard/municipality/zones/SectorsList";
+import SectorMapClient from "@/app/[locale]/(dashboard)/dashboard/admin/municipality/zones/SectorMapClient";
+import SectorsList from "@/app/[locale]/(dashboard)/dashboard/admin/municipality/zones/SectorsList";
 import { createClient } from "@/lib/supabase/client";
 
 export default function ZonesClientWrapper({ onSave }: { onSave: any }) {

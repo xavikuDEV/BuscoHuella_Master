@@ -15,7 +15,7 @@ import {
 import {
   registerPetAction,
   updatePetAction,
-} from "@/app/[locale]/dashboard/admin/pets/actions";
+} from "@/lib/actions/pets.actions";
 
 // 🛡️ Esquema con validación de obligatorios
 const petSchema = z.object({
@@ -73,7 +73,7 @@ export default function PetRegistrationForm({
       });
 
       const owner = owners.find((o) => o.id === p.owner_id);
-      setOwnerSearch(owner?.full_name || owner?.email || "");
+      setOwnerSearch(owner?.display_name || owner?.email || "");
       setShowProFields(true);
     }
   }, [petToEdit, reset, owners]);
@@ -81,7 +81,7 @@ export default function PetRegistrationForm({
   const filteredOwners = useMemo(() => {
     return owners.filter(
       (o) =>
-        (o.full_name || "").toLowerCase().includes(ownerSearch.toLowerCase()) ||
+        (o.display_name || "").toLowerCase().includes(ownerSearch.toLowerCase()) ||
         o.email.toLowerCase().includes(ownerSearch.toLowerCase()),
     );
   }, [owners, ownerSearch]);
@@ -152,12 +152,12 @@ export default function PetRegistrationForm({
                   key={o.id}
                   onClick={() => {
                     setValue("owner_id", o.id);
-                    setOwnerSearch(o.full_name || o.email);
+                    setOwnerSearch(o.display_name || o.email);
                   }}
                   className="p-3 hover:bg-slate-800 cursor-pointer text-xs border-b border-slate-800 last:border-0"
                 >
                   <p className="font-bold text-white">
-                    {o.full_name || "Sin nombre"}
+                    {o.display_name || "Sin nombre"}
                   </p>
                   <p className="text-slate-500 text-[9px]">{o.email}</p>
                 </div>

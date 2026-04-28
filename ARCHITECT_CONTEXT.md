@@ -1,5 +1,5 @@
 # 🏗️ ARCHITECT CONTEXT: BuscoHuella Ecosystem
-> Última actualización: 26/04/2026 16:29:14
+> Última actualización: 28/04/2026 10:55:38
 
 ## 📍 Estado Actual: FASE 3 (Conectividad y Auth) 🛰️
 - **Infraestructura:** Monorepo pnpm (Next.js 16 + Expo).

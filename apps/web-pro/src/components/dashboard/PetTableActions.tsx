@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { deletePetAction } from "@/app/[locale]/dashboard/admin/pets/actions";
+import { deletePetAction } from "@/lib/actions/pets.actions";
 
 interface Props {
   petId: string;

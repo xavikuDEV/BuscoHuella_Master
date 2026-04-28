@@ -1,6 +1,6 @@
 # 🐾 Estructura del Búnker: BuscoHuella 2026
-> **Última actualización:** 27/04/2026 14:49:12
-> **Métricas:** **213** archivos · **108** TypeScript · **1** CSS · **2** SQL · **2** YAML
+> **Última actualización:** 28/04/2026 12:59:53
+> **Métricas:** **225** archivos · **120** TypeScript · **1** CSS · **2** SQL · **2** YAML
 
 ---
 
@@ -80,7 +80,6 @@
 │       │   │   │   │   ├── 📄 IncidentReport.tsx
 │       │   │   │   │   ├── 📄 LiveHeader.tsx
 │       │   │   │   │   ├── 📄 LiveMap.tsx
-│       │   │   │   │   ├── 📄 ManageUsersClient.tsx
 │       │   │   │   │   ├── 📄 MapClickHandler.tsx
 │       │   │   │   │   ├── 📄 MapInner.tsx
 │       │   │   │   │   ├── 📄 MapSelectorInner.tsx
@@ -125,7 +124,9 @@
 │       │   │   ├── 📁 actions
 │       │   │   │   ├── 📄 auth.actions.ts
 │       │   │   │   ├── 📄 incidents.actions.ts
-│       │   │   │   └── 📄 logs.actions.ts
+│       │   │   │   ├── 📄 logs.actions.ts
+│       │   │   │   ├── 📄 pets.actions.ts
+│       │   │   │   └── 📄 users.actions.ts
 │       │   │   ├── 📁 supabase
 │       │   │   │   ├── 📄 client.ts
 │       │   │   │   └── 📄 server.ts
@@ -142,7 +143,8 @@
 │       ├── 📄 package.json
 │       ├── 📄 postcss.config.mjs
 │       ├── 📄 README.md
-│       └── 📄 tsconfig.json
+│       ├── 📄 tsconfig.json
+│       └── 📄 tsconfig.tsbuildinfo
 ├── 📁 docs
 │   ├── 📁 adr
 │   ├── 📁 db
