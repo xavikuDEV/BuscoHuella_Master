@@ -1,7 +1,14 @@
 import Image from "next/image";
+import Link from "next/link";
 import { SYSTEM_NAME, PetRepository, supabase } from "@buscohuella/shared";
 
-export default async function Home() {
+interface HomePageProps {
+  params: Promise<{ locale: string }>;
+}
+
+export default async function Home(props: HomePageProps) {
+  const { locale } = await props.params;
+
   // 🛰️ Test de Conectividad en tiempo real
   // Intentamos recuperar el conteo de animales para validar el Handshake
   const petRepo = new PetRepository(supabase);
@@ -46,15 +53,15 @@ export default async function Home() {
           aria-label="Enlaces principales"
           className="flex flex-col gap-4 sm:flex-row"
         >
-          <a
+          <Link
             className="flex h-12 items-center justify-center gap-2 rounded-full bg-zinc-900 px-6 text-sm font-medium text-zinc-50 transition-all hover:bg-zinc-700 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
-            href="/dashboard"
+            href={`/es/dashboard/admin`}
           >
             Panel Autoridades
-          </a>
+          </Link>
           <a
             className="flex h-12 items-center justify-center rounded-full border border-zinc-200 px-6 text-sm font-medium transition-all hover:bg-zinc-100 dark:border-zinc-800 dark:hover:bg-zinc-900"
-            href="/docs"
+            href={`/${locale}/docs`}
           >
             Documentación DUA
           </a>

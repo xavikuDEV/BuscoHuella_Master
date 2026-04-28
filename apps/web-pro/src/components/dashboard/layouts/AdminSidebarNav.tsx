@@ -21,11 +21,12 @@ export default function AdminSidebarNav() {
   const pathname = usePathname();
   const locale = pathname.split("/")[1] || "es";
 
-  // --- LÓGICA DE NODO OPERATIVO DINÁMICO ---
+  // --- 🛰️ LÓGICA DE NODO OPERATIVO DINÁMICO ---
   const isIncidentDetail =
     pathname.includes("/incidents/") && pathname.split("/").length > 5;
   const isTerritorial = pathname.includes("/municipality/zones");
-  const isCommandCenter = pathname.endsWith("/admin");
+  const isCommandCenter = pathname.endsWith("/dashboard/admin");
+  const isAdminLogs = pathname.includes("/logs");
 
   let nodeID = "GLOBAL_HUB";
   let nodeStatus = "bg-emerald-500";
@@ -40,11 +41,27 @@ export default function AdminSidebarNav() {
     nodeID = `UNIT_CELL_${shortId}`;
     nodeStatus = "bg-rose-500";
     nodeLabel = "Tactical_Response";
+  } else if (isAdminLogs) {
+    nodeID = "LOG_MONITOR_01";
+    nodeStatus = "bg-amber-500";
+    nodeLabel = "Telemetry_Audit";
   } else if (isCommandCenter) {
     nodeID = "ADMIN_CORE_BCN";
     nodeStatus = "bg-cyan-500";
     nodeLabel = "Live_Telemetry";
   }
+
+  // --- 🔐 PROTOCOLO DE CIERRE DE SESIÓN ---
+  const handleLogout = async () => {
+    try {
+      // Ejecutamos la Server Action para limpiar cookies y sesión en el servidor
+      await logout();
+      // El redirect ya lo hace la Server Action, pero por seguridad
+      // y para limpiar el estado del cliente, Next.js se encarga del resto.
+    } catch (error) {
+      console.error("Error en el protocolo de salida:", error);
+    }
+  };
 
   const groups = [
     {
@@ -82,7 +99,7 @@ export default function AdminSidebarNav() {
       items: [
         {
           name: "Gestión Territorial",
-          href: `/${locale}/dashboard/municipality/zones`,
+          href: `/${locale}/dashboard/admin/municipality/zones`,
           icon: MapIcon,
         },
         {
@@ -96,7 +113,7 @@ export default function AdminSidebarNav() {
 
   return (
     <div className="flex flex-col h-full bg-slate-950 border-r border-slate-900/50 select-none shadow-2xl overflow-hidden">
-      {/* 🚀 CABECERA */}
+      {/* 🚀 CABECERA: BRANDING TÁCTICO */}
       <div className="p-8 mb-2">
         <div className="flex items-center gap-4">
           <div className="relative group">
@@ -119,7 +136,7 @@ export default function AdminSidebarNav() {
         </div>
       </div>
 
-      {/* 📂 NAVEGACIÓN (Ocultamos Scrollbar con CSS Inline para seguridad) */}
+      {/* 📂 NAVEGACIÓN PRINCIPAL */}
       <nav
         className="flex-1 px-5 space-y-8 overflow-y-auto"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
@@ -165,9 +182,9 @@ export default function AdminSidebarNav() {
         ))}
       </nav>
 
-      {/* 🛰️ MONITOR INFERIOR */}
+      {/* 🛰️ MONITOR DE ESTADO Y CIERRE (FOOTER) */}
       <div className="p-6 mt-auto">
-        <div className="bg-slate-900/40 border border-slate-800/60 rounded-4xl p-5 space-y-4 backdrop-blur-md">
+        <div className="bg-slate-900/40 border border-slate-800/60 rounded-[2.5rem] p-5 space-y-4 backdrop-blur-md">
           <div className="flex items-center justify-between">
             <div className="flex flex-col gap-0.5">
               <span className="text-[7px] font-black text-slate-600 uppercase tracking-widest">
@@ -194,7 +211,7 @@ export default function AdminSidebarNav() {
             />
           </div>
           <button
-            onClick={() => logout()}
+            onClick={handleLogout}
             className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-[9px] font-black uppercase text-rose-500 bg-rose-500/5 hover:bg-rose-500/10 border border-rose-500/10 transition-all active:scale-95"
           >
             <LogOut size={12} /> Terminar_Turno

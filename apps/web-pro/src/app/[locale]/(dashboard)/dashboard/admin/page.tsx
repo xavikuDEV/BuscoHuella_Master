@@ -23,7 +23,7 @@ import CommandCenterClient from "@/components/dashboard/home/CommandCenterClient
 
 export const dynamic = "force-dynamic";
 
-export default async function DashboardPage(props: {
+export default async function AdminPage(props: {
   params: Promise<{ locale: string }>;
   searchParams: Promise<{ sector?: string; sort?: string; filter?: string }>;
 }) {

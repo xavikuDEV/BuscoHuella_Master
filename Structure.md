@@ -1,6 +1,6 @@
 # 🐾 Estructura del Búnker: BuscoHuella 2026
-> **Última actualización:** 26/04/2026 15:21:13
-> **Métricas:** **221** archivos · **117** TypeScript · **1** CSS · **2** SQL · **2** YAML
+> **Última actualización:** 27/04/2026 14:49:12
+> **Métricas:** **213** archivos · **108** TypeScript · **1** CSS · **2** SQL · **2** YAML
 
 ---
 
@@ -63,7 +63,6 @@
 │       │   │   └── 📄 setup.ts
 │       │   ├── 📁 app
 │       │   │   ├── 📁 [locale]
-│       │   │   ├── 📁 auth
 │       │   │   ├── 📄 favicon.ico
 │       │   │   └── 📄 globals.css
 │       │   ├── 📁 components
@@ -81,6 +80,7 @@
 │       │   │   │   │   ├── 📄 IncidentReport.tsx
 │       │   │   │   │   ├── 📄 LiveHeader.tsx
 │       │   │   │   │   ├── 📄 LiveMap.tsx
+│       │   │   │   │   ├── 📄 ManageUsersClient.tsx
 │       │   │   │   │   ├── 📄 MapClickHandler.tsx
 │       │   │   │   │   ├── 📄 MapInner.tsx
 │       │   │   │   │   ├── 📄 MapSelectorInner.tsx
@@ -124,10 +124,10 @@
 │       │   ├── 📁 lib
 │       │   │   ├── 📁 actions
 │       │   │   │   ├── 📄 auth.actions.ts
-│       │   │   │   └── 📄 incidents.actions.ts
+│       │   │   │   ├── 📄 incidents.actions.ts
+│       │   │   │   └── 📄 logs.actions.ts
 │       │   │   ├── 📁 supabase
 │       │   │   │   ├── 📄 client.ts
-│       │   │   │   ├── 📄 middleware.ts
 │       │   │   │   └── 📄 server.ts
 │       │   │   ├── 📄 incidentUtils.ts
 │       │   │   ├── 📄 supabase.ts
@@ -209,6 +209,7 @@
 ├── 📁 test-results
 │   └── 📄 .last-run.json
 ├── 📁 tests
+│   ├── 📄 simulate-register.ts
 │   └── 📄 test-connections.mjs
 ├── 📄 .ai_context.md
 ├── 📄 .aider.chat.history.md
@@ -220,6 +221,7 @@
 ├── 📄 ARCHITECTURE.md
 ├── 📄 CONTRIBUTORS.md
 ├── 📄 credentials.json
+├── 📄 menu.ps1
 ├── 📄 package.json
 ├── 📄 playwright.config.ts
 ├── 📄 pnpm-workspace.yaml

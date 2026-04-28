@@ -3,7 +3,7 @@
 import {
   deleteLogAction,
   clearAllLogsAction,
-} from "@/app/[locale]/dashboard/admin/logs/actions";
+} from "@/lib/actions/logs.actions";
 
 export default function SystemTelemetry({ logs }: { logs: any[] }) {
   return (
